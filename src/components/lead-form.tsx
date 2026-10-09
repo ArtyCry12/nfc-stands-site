@@ -40,6 +40,12 @@ export function LeadForm({ concept, configSummary, imageDataUrl }: Props) {
           concept,
           configSummary,
           imageDataUrl: imageDataUrl || undefined,
+          idempotencyKey:
+            concept &&
+            typeof concept === "object" &&
+            "lead_id" in concept
+              ? `lead:${String((concept as { lead_id: string }).lead_id)}`
+              : undefined,
         }),
       });
       const data = await res.json();

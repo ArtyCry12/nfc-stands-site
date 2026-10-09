@@ -15,6 +15,7 @@ const BodySchema = z.object({
   configSummary: z.string().max(2000).optional(),
   concept: z.unknown().optional(),
   imageDataUrl: z.string().max(2_500_000).optional(),
+  idempotencyKey: z.string().max(120).optional(),
 });
 
 export async function GET() {
@@ -45,12 +46,21 @@ export async function POST(request: Request) {
     phone: parsed.data.phone,
     message: parsed.data.message,
     configSummary: parsed.data.configSummary,
-    conceptJson: parsed.data.concept,
+    concept: parsed.data.concept,
   });
+
+  const leadId =
+    parsed.data.concept &&
+    typeof parsed.data.concept === "object" &&
+    "lead_id" in (parsed.data.concept as object)
+      ? String((parsed.data.concept as { lead_id?: string }).lead_id || "")
+      : "";
 
   const result = await handoffToTelegram({
     text,
     imageDataUrl: parsed.data.imageDataUrl,
+    idempotencyKey:
+      parsed.data.idempotencyKey || (leadId ? `lead:${leadId}` : undefined),
   });
 
   if (result.ok) {

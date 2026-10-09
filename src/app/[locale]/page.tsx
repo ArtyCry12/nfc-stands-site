@@ -9,7 +9,12 @@ import { Hero } from "@/components/hero";
 import { LeadForm } from "@/components/lead-form";
 import { ProductVisual } from "@/components/product-visual";
 import { Link } from "@/i18n/navigation";
-import { catalog } from "@/lib/catalog";
+import {
+  catalog,
+  formatStandardTierTable,
+  standardStandUnitFrom,
+} from "@/lib/catalog";
+import { CASES } from "@/lib/knowledge-base";
 import type { Locale } from "@/i18n/routing";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -20,7 +25,10 @@ export default async function HomePage({ params }: Props) {
   const t = await getTranslations("home");
   const tc = await getTranslations("catalog");
   const tf = await getTranslations("faq");
+  const tcases = await getTranslations("cases");
   const loc = locale as Locale;
+  const tiers = formatStandardTierTable(loc);
+  const fromPrice = standardStandUnitFrom(1);
 
   return (
     <>
@@ -54,9 +62,16 @@ export default async function HomePage({ params }: Props) {
               </h2>
               <p className="mt-2 text-sm text-[var(--tf-meta)]">{t("catalogNote")}</p>
             </div>
-            <Link href="/catalog" className="text-sm font-medium underline-offset-4 hover:underline">
+            <Link
+              href="/catalog"
+              className="text-sm font-medium underline-offset-4 hover:underline"
+            >
               {tc("title")} →
             </Link>
+          </div>
+          <div className="mt-4 rounded-2xl bg-[var(--tf-stage-soft)] p-4 text-sm">
+            <p className="font-medium">{tiers.header}</p>
+            <p className="mt-1 text-[var(--tf-body)]">{tiers.rows.join(" · ")}</p>
           </div>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {catalog.slice(0, 3).map((product) => (
@@ -71,11 +86,32 @@ export default async function HomePage({ params }: Props) {
                     {product.name[loc]}
                   </h3>
                   <p className="mt-1 text-sm text-[var(--tf-meta)]">
-                    {product.basePriceFrom != null
-                      ? `${tc("from")} ${product.basePriceFrom} ${tc("currency")}`
+                    {product.pricing === "standard-tiers"
+                      ? `${tc("from")} ${fromPrice} MDL`
                       : tc("onRequest")}
                   </p>
                 </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="rounded-[1.75rem] bg-white p-5 shadow-[0_8px_30px_rgba(0,0,0,0.08)] md:p-8">
+          <h2 className="font-[family-name:var(--font-display)] text-3xl font-bold lowercase tracking-tight">
+            {tcases("title")}
+          </h2>
+          <p className="mt-2 text-sm text-[var(--tf-meta)]">{tcases("subtitle")}</p>
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            {CASES.map((c) => (
+              <Link
+                key={c.slug}
+                href={`/cases/${c.slug}`}
+                className="rounded-2xl border border-[var(--tf-ink)]/10 p-4 transition hover:border-[var(--tf-accent)]"
+              >
+                <h3 className="font-[family-name:var(--font-display)] text-lg font-semibold">
+                  {c.name}
+                </h3>
+                <p className="mt-2 text-sm text-[var(--tf-body)]">{c.summary[loc]}</p>
               </Link>
             ))}
           </div>

@@ -5,14 +5,15 @@
     "defaultDescription": "Produse NFC fizice și scenarii digitale pentru afaceri din Moldova și România. Consultant AI, configurator și predare în Telegram."
   },
   "nav": {
-    "catalog": "Catalog",
+    "catalog": "Produse",
     "solutions": "Soluții",
     "consultant": "Consultant AI",
-    "concept": "Concept",
+    "concept": "AI Studio",
     "about": "Despre",
     "contact": "Contact",
     "cta": "Vorbește cu noi",
-    "configure": "Configurează"
+    "configure": "Configurează",
+    "cases": "Cazuri"
   },
   "home": {
     "eyebrow": "Local NFC brand · Moldova & România",
@@ -32,7 +33,7 @@
     "why3Title": "Predare în Telegram",
     "why3Body": "Configurația, conceptul și imaginea ajung la manager cu context, nu ca un mesaj gol.",
     "catalogTitle": "asortiment de start",
-    "catalogNote": "Prețurile sunt orientative „de la” până la confirmarea listei fondatorului.",
+    "catalogNote": "Stand standard: 1–2 @ 450 MDL; 3–6 @ 400; 7–10 @ 350; 11–19 @ 300; 20+ @ 250. Custom = ofertă individuală.",
     "faqTitle": "întrebări frecvente",
     "leadTitle": "trimite ideea managerului",
     "leadSub": "Răspundem în Telegram. Fără coș, fără checkout fals."
@@ -42,12 +43,14 @@
     "subtitle": "Standuri pentru recenzii, plăci, stickere și kituri digitale. Configurează și trimite în Telegram.",
     "from": "de la",
     "currency": "MDL",
-    "onRequest": "la cerere",
+    "onRequest": "ofertă individuală",
     "view": "Detalii",
     "configure": "Configurează",
     "materials": "Materiale",
     "scenarios": "Scenarii",
-    "unknownPrice": "Preț final după branding și tiraj"
+    "unknownPrice": "Preț final după branding și tiraj",
+    "unit": "buc.",
+    "tiersTitle": "Trepte stand standard"
   },
   "configure": {
     "title": "configurator",
@@ -57,9 +60,16 @@
     "branding": "Branding",
     "scenario": "Scenariu digital",
     "estimate": "Estimare",
-    "estimateNote": "Estimare internă — nu este ofertă fermă până la confirmarea managerului.",
+    "estimateNote": "Trepte aprobate doar pentru standul standard. Custom = ofertă individuală.",
     "cta": "Trimite în Telegram",
-    "summary": "Rezumat configurație"
+    "summary": "Rezumat configurație",
+    "quantity": "Cantitate",
+    "destination": "URL destinație",
+    "qrNote": "QR-ul este generat din URL validat — nu desenat de AI.",
+    "colorNote": "Culorile vizuale se confirmă cu producția.",
+    "total": "Total",
+    "orderTelegram": "Comandă via Telegram",
+    "orderTelegramNote": "Se deschide un mesaj precompletat — tu apeși Send. Linkul nu atașează imagine."
   },
   "consultant": {
     "title": "consultant AI",
@@ -78,7 +88,10 @@
     "offer": "Ofertă personalizată",
     "unknowns": "De confirmat cu managerul",
     "toConcept": "Generează vizualul",
-    "toTelegram": "Trimite managerului"
+    "toTelegram": "Trimite conceptul managerului",
+    "quantity": "Cantitate (opțional)",
+    "customQuote": "Ofertă individuală — confirmare umană",
+    "consent": "Trimițând, accepți ca brief-ul/conceptul să fie partajat echipei via Telegram."
   },
   "concept": {
     "title": "studio de concept",
@@ -88,9 +101,10 @@
     "limitHit": "Ai folosit cele două generări. Continuă cu managerul în Telegram — contextul este păstrat.",
     "loading": "Generăm vizualul produsului…",
     "fallbackNotice": "Fără cheie de imagine — returnăm un stub SVG realist al produsului.",
-    "visualNote": "Vizualul nu certifică fabricabilitatea 1:1. Specificația de producție e separată.",
+    "visualNote": "Previzualizare concept — materialele, dimensiunile, oferta și designul de producție sunt confirmate de echipă.",
     "error": "Generarea a eșuat.",
-    "needConcept": "Pornește mai întâi de la consultant pentru un contract JSON valid."
+    "needConcept": "Pornește mai întâi de la consultant pentru un contract JSON valid.",
+    "consent": "Trimițând, accepți partajarea imaginii și a brief-ului cu echipa via Telegram."
   },
   "solutions": {
     "title": "soluții",
@@ -150,5 +164,9 @@
   "footer": {
     "tagline": "Local NFC brand",
     "rights": "Touchform.md · Chișinău"
+  },
+  "cases": {
+    "title": "cazuri",
+    "subtitle": "Dovezi reale — fără metrici inventate."
   }
 }

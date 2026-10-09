@@ -56,6 +56,10 @@ export function ConceptStudio() {
       setImage(data.imageDataUrl);
       setMode(data.mode);
       setRemaining(data.remaining);
+      if (data.concept) {
+        setConcept(data.concept);
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data.concept));
+      }
       if (data.remaining === 0) setLimitHit(true);
     } catch {
       setError(t("error"));
@@ -69,10 +73,16 @@ export function ConceptStudio() {
       <div className="overflow-hidden rounded-[1.75rem] bg-[var(--tf-photo)] shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
         {image ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={image} alt={concept?.concept.title || "concept"} className="h-full w-full object-cover" />
+          <img
+            src={image}
+            alt={concept?.recommendation.concept_name || "concept"}
+            className="h-full w-full object-cover"
+          />
         ) : (
           <div className="flex min-h-[320px] items-center justify-center p-8 text-center text-white/60">
-            {concept ? concept.concept.title : t("needConcept")}
+            {concept
+              ? concept.recommendation.concept_name
+              : t("needConcept")}
           </div>
         )}
       </div>
@@ -107,6 +117,7 @@ export function ConceptStudio() {
         )}
         {(limitHit || image) && concept && (
           <div className="border-t pt-4">
+            <p className="mb-3 text-xs text-[var(--tf-meta)]">{t("consent")}</p>
             <LeadForm concept={concept} imageDataUrl={image} />
           </div>
         )}

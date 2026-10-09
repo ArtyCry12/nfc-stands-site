@@ -15,6 +15,7 @@ export function SiteHeader() {
     { href: "/catalog", label: t("catalog") },
     { href: "/solutions", label: t("solutions") },
     { href: "/consultant", label: t("consultant") },
+    { href: "/cases", label: t("cases") },
     { href: "/concept", label: t("concept") },
   ] as const;
 

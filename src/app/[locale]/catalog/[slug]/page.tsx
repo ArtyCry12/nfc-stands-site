@@ -3,7 +3,12 @@ import { notFound } from "next/navigation";
 import { ProductVisual } from "@/components/product-visual";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
-import { catalog, getProduct } from "@/lib/catalog";
+import {
+  catalog,
+  formatStandardTierTable,
+  getProduct,
+  standardStandUnitFrom,
+} from "@/lib/catalog";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -19,6 +24,7 @@ export default async function ProductPage({ params }: Props) {
   const t = await getTranslations("catalog");
   const n = await getTranslations("nav");
   const loc = locale as Locale;
+  const tiers = formatStandardTierTable(loc);
 
   return (
     <div className="mx-auto grid max-w-6xl gap-8 px-4 pb-16 pt-28 md:grid-cols-2 md:px-6">
@@ -30,27 +36,29 @@ export default async function ProductPage({ params }: Props) {
           {product.name[loc]}
         </h1>
         <p className="text-[var(--tf-body)]">{product.summary[loc]}</p>
-        <p className="text-sm text-[var(--tf-meta)]">{product.dimensions}</p>
+        {product.dimensionsConfirmed ? (
+          <p className="text-sm text-[var(--tf-meta)]">{product.dimensionsConfirmed}</p>
+        ) : (
+          <p className="text-sm text-[var(--tf-meta)]">{t("unknownPrice")}</p>
+        )}
         <p className="font-[family-name:var(--font-display)] text-2xl font-bold">
-          {product.basePriceFrom != null
-            ? `${t("from")} ${product.basePriceFrom} ${t("currency")}`
+          {product.pricing === "standard-tiers"
+            ? `${t("from")} ${standardStandUnitFrom(1)} MDL / ${t("unit")}`
             : t("onRequest")}
         </p>
-        <p className="text-xs text-[var(--tf-meta)]">{t("unknownPrice")}</p>
-        <div>
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--tf-meta)]">
-            {t("materials")}
-          </p>
-          <p className="mt-1 text-sm">
-            {product.materials.map((m) => m.label[loc]).join(" · ")}
-          </p>
-        </div>
+        {product.pricing === "standard-tiers" && (
+          <ul className="text-sm text-[var(--tf-body)]">
+            {tiers.rows.map((row) => (
+              <li key={row}>{row}</li>
+            ))}
+          </ul>
+        )}
         <div>
           <p className="text-xs uppercase tracking-[0.18em] text-[var(--tf-meta)]">
             {t("scenarios")}
           </p>
           <p className="mt-1 text-sm">
-            {product.scenarios.map((m) => m.label[loc]).join(" · ")}
+            {product.experiences.map((m) => m.label[loc]).join(" · ")}
           </p>
         </div>
         <Link

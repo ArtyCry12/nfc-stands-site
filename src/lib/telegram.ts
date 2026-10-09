@@ -1,18 +1,35 @@
+import type { ConceptContract } from "@/lib/concept-schema";
+
 export type TelegramHandoffInput = {
   text: string;
   imageDataUrl?: string | null;
+  idempotencyKey?: string;
 };
 
 export type TelegramHandoffResult =
   | { ok: true; mode: "bot"; messageId: number }
-  | { ok: false; mode: "fallback"; reason: string; publicUrl: string; summary: string };
+  | {
+      ok: false;
+      mode: "fallback";
+      reason: string;
+      publicUrl: string;
+      summary: string;
+    };
+
+const sentKeys = new Map<string, number>();
 
 function publicTelegramUrl() {
-  return process.env.NEXT_PUBLIC_TELEGRAM_URL || "https://t.me/touchform_md";
+  return (
+    process.env.TELEGRAM_CUSTOMER_CHAT_LINK ||
+    process.env.NEXT_PUBLIC_TELEGRAM_URL ||
+    "https://t.me/touchform_md"
+  );
 }
 
 export function telegramConfigured() {
-  return Boolean(process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_MANAGER_CHAT_ID);
+  return Boolean(
+    process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_MANAGER_CHAT_ID,
+  );
 }
 
 async function sendTelegram(method: string, body: FormData | URLSearchParams) {
@@ -36,6 +53,15 @@ export async function handoffToTelegram(
   input: TelegramHandoffInput,
 ): Promise<TelegramHandoffResult> {
   const summary = input.text.slice(0, 3500);
+
+  if (input.idempotencyKey && sentKeys.has(input.idempotencyKey)) {
+    return {
+      ok: true,
+      mode: "bot",
+      messageId: sentKeys.get(input.idempotencyKey)!,
+    };
+  }
+
   if (!telegramConfigured()) {
     return {
       ok: false,
@@ -63,11 +89,9 @@ export async function handoffToTelegram(
           mime.includes("svg") ? "concept.svg" : "concept.png",
         );
         const data = await sendTelegram("sendPhoto", form);
-        return {
-          ok: true,
-          mode: "bot",
-          messageId: data.result?.message_id ?? 0,
-        };
+        const messageId = data.result?.message_id ?? 0;
+        if (input.idempotencyKey) sentKeys.set(input.idempotencyKey, messageId);
+        return { ok: true, mode: "bot", messageId };
       }
     }
 
@@ -76,11 +100,9 @@ export async function handoffToTelegram(
       text: summary,
     });
     const data = await sendTelegram("sendMessage", params);
-    return {
-      ok: true,
-      mode: "bot",
-      messageId: data.result?.message_id ?? 0,
-    };
+    const messageId = data.result?.message_id ?? 0;
+    if (input.idempotencyKey) sentKeys.set(input.idempotencyKey, messageId);
+    return { ok: true, mode: "bot", messageId };
   } catch (error) {
     return {
       ok: false,
@@ -92,22 +114,70 @@ export async function handoffToTelegram(
   }
 }
 
+export function formatManagerCaption(concept: ConceptContract, previewUrl?: string) {
+  const c = concept;
+  const priceLine =
+    c.commercial.price_type === "fixed-tier" &&
+    c.commercial.unit_price_mdl != null
+      ? `qty ${c.design.quantity ?? "?"} · ${c.commercial.unit_price_mdl} MDL/u · total ${c.commercial.total_price_mdl} MDL (${c.commercial.price_source})`
+      : c.commercial.price_type === "custom-quote"
+        ? "custom quote — human confirmation"
+        : "pricing not yet known";
+
+  return [
+    `New Touchform.md concept inquiry · ID: ${c.lead_id}`,
+    `Business: ${c.business.industry || c.business.business_description || "—"}`,
+    `Goal: ${c.business.desired_outcome}`,
+    `Recommendation: ${c.recommendation.concept_name}`,
+    `Physical product/design: ${c.recommendation.physical_product_type} · ${c.design.primary_color} · ${c.design.material}`,
+    `Digital experience: ${c.recommendation.digital_experience_type} → ${c.recommendation.customer_action_after_tap}`,
+    `Personalized offer: ${c.recommendation.offer_summary}`,
+    `Quantity / pricing: ${priceLine}`,
+    `Needs human confirmation: ${c.production.open_questions.join("; ") || "—"}`,
+    `Language: ${c.language}`,
+    previewUrl ? `Preview: ${previewUrl}` : null,
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
 export function formatConceptSummary(payload: {
   name?: string;
   phone?: string;
   message?: string;
-  conceptJson?: unknown;
+  concept?: ConceptContract | unknown;
   configSummary?: string;
 }) {
+  if (payload.concept && typeof payload.concept === "object") {
+    const maybe = payload.concept as ConceptContract;
+    if (maybe.schema_version === "1.0" && maybe.lead_id) {
+      const base = formatManagerCaption(maybe);
+      const contact = [
+        payload.name ? `Contact name: ${payload.name}` : null,
+        payload.phone ? `Phone: ${payload.phone}` : null,
+        payload.message ? `Message: ${payload.message}` : null,
+      ]
+        .filter(Boolean)
+        .join("\n");
+      return contact ? `${base}\n${contact}` : base;
+    }
+  }
+
   const lines = [
     "Touchform.md lead",
     payload.name ? `Name: ${payload.name}` : null,
     payload.phone ? `Phone: ${payload.phone}` : null,
     payload.message ? `Message: ${payload.message}` : null,
     payload.configSummary ? `Config:\n${payload.configSummary}` : null,
-    payload.conceptJson
-      ? `Concept JSON:\n${JSON.stringify(payload.conceptJson, null, 2).slice(0, 2800)}`
-      : null,
   ].filter(Boolean);
   return lines.join("\n");
+}
+
+/** Prefill-only share URL for standard catalog orders (no image attachment). */
+export function buildTelegramShareUrl(text: string) {
+  const base = "https://t.me/share/url";
+  const url = new URL(base);
+  url.searchParams.set("url", process.env.NEXT_PUBLIC_SITE_URL || "https://touchform.md");
+  url.searchParams.set("text", text.slice(0, 1500));
+  return url.toString();
 }

@@ -1,149 +1,241 @@
-import { catalog, getProduct } from "@/lib/catalog";
+import { getProduct } from "@/lib/catalog";
 import type { ConceptContract, ConsultRequest } from "@/lib/concept-schema";
+import {
+  DIGITAL_EXPERIENCES,
+  STANDARD_REVIEW_STAND_ID,
+  knowledgeBrief,
+} from "@/lib/knowledge-base";
+import { priceStandardReviewStand } from "@/lib/pricing";
 
-function pickSlug(goal: string, business: string) {
+function pickDirection(goal: string, business: string) {
   const g = `${goal} ${business}`.toLowerCase();
   if (g.includes("menu") || g.includes("meniu") || g.includes("меню")) {
-    return "smart-menu-kit";
-  }
-  if (g.includes("sticker") || g.includes("наклей") || g.includes("stickere")) {
-    return "nfc-sticker-pack";
+    return {
+      product: "smart-menu-kit",
+      experience: "smart-menu",
+      custom: true,
+    };
   }
   if (
-    g.includes("hotel") ||
-    g.includes("premium") ||
-    g.includes("wood") ||
-    g.includes("lemn") ||
-    g.includes("дерев")
+    g.includes("sticker") ||
+    g.includes("наклей") ||
+    g.includes("stickere") ||
+    g.includes("plac") ||
+    g.includes("таблич") ||
+    g.includes("sign")
   ) {
-    return "review-stand-wood";
+    return {
+      product: "nfc-stickers-signs",
+      experience: "custom-link",
+      custom: true,
+    };
   }
-  if (g.includes("plaque") || g.includes("plac") || g.includes("таблич") || g.includes("wifi")) {
-    return "nfc-plaque";
+  if (
+    g.includes("custom") ||
+    g.includes("personalizat") ||
+    g.includes("кастом") ||
+    g.includes("bespoke") ||
+    g.includes("formă") ||
+    g.includes("unique")
+  ) {
+    return {
+      product: "custom-nfc-product",
+      experience: "info-contact",
+      custom: true,
+    };
   }
-  return "review-stand-classic";
+  return {
+    product: STANDARD_REVIEW_STAND_ID,
+    experience: "google-reviews",
+    custom: false,
+  };
 }
 
 export function buildMockConcept(input: ConsultRequest): ConceptContract {
-  const slug = pickSlug(input.goal, input.business);
-  const product = getProduct(slug) ?? catalog[0];
   const locale = input.locale;
-  const scenario = product.scenarios[0];
-  const material = product.materials[0];
-  const color = product.colors[0];
-  const finish = product.finishes[0];
+  const direction = pickDirection(input.goal, input.business);
+  const product = getProduct(direction.product)!;
+  const experience =
+    DIGITAL_EXPERIENCES.find((d) => d.id === direction.experience) ??
+    DIGITAL_EXPERIENCES[0];
+  const qty = input.quantity ?? (direction.custom ? null : 2);
 
-  const titles = {
-    ro: `${product.name.ro} pentru ${input.business}`,
-    ru: `${product.name.ru} для ${input.business}`,
-    en: `${product.name.en} for ${input.business}`,
-  };
+  const commercial = direction.custom
+    ? {
+        price_type: "custom-quote" as const,
+        unit_price_mdl: null,
+        total_price_mdl: null,
+        price_source: null,
+      }
+    : (() => {
+        const priced = priceStandardReviewStand(qty ?? 2);
+        return {
+          price_type: "fixed-tier" as const,
+          unit_price_mdl: priced.unitPriceMdl,
+          total_price_mdl: priced.totalPriceMdl,
+          price_source: priced.priceSource,
+        };
+      })();
 
-  const summaries = {
-    ro: `Propunem ${product.name.ro} legat de „${input.goal}”, plasat ${input.context || "în zona clientului"}.`,
-    ru: `Предлагаем ${product.name.ru} под задачу «${input.goal}», размещение: ${input.context || "в зоне клиента"}.`,
-    en: `We propose ${product.name.en} for “${input.goal}”, placed ${input.context || "in the customer zone"}.`,
-  };
+  const alternatives = [
+    {
+      title: product.name[locale],
+      why: product.summary[locale],
+    },
+    {
+      title:
+        locale === "ru"
+          ? "Кастомная форма + цифровой сценарий"
+          : locale === "ro"
+            ? "Formă custom + scenariu digital"
+            : "Custom form + digital scenario",
+      why:
+        locale === "ru"
+          ? "Если стандартный стенд не подходит по материалу или брендингу — индивидуальная смета."
+          : locale === "ro"
+            ? "Dacă standul standard nu se potrivește ca material sau branding — ofertă individuală."
+            : "If the standard stand does not fit material or branding — individual quote.",
+    },
+    {
+      title: experience.label[locale],
+      why: experience.note[locale],
+    },
+  ];
 
   return {
-    version: "1",
-    conceptId: crypto.randomUUID(),
-    locale,
+    schema_version: "1.0",
+    language: locale,
+    lead_id: crypto.randomUUID(),
     business: {
-      type: input.business,
-      audience: undefined,
-      locationHint: input.context,
+      industry: input.business,
+      business_description: input.business,
+      audience: null,
+      location_context: input.context ?? null,
+      pain_point: input.goal,
+      desired_outcome: input.goal,
+      constraints: [],
     },
-    problem: input.goal,
-    concept: {
-      title: titles[locale],
-      summary: summaries[locale],
-      whyItFits: [
-        product.summary[locale],
-        `${scenario.label[locale]} → clear customer action`,
-        "Physical object and digital scenario designed as one system",
-      ],
-    },
-    physicalProduct: {
-      catalogSlug: product.slug,
-      type: product.category,
-      dimensions: product.dimensions,
-      material: material.label[locale],
-      color: color.label[locale],
-      shape: product.category === "sticker" ? "disc" : "table-tent",
-      finish: finish.label[locale],
-    },
-    branding: {
-      brandColors: [],
-      logoRequired: true,
-      text: null,
-      qrOptional: scenario.id === "reviews",
-    },
-    placement: input.context || null,
-    digitalScenario: {
-      id: scenario.id,
-      label: scenario.label[locale],
-      targetAction: input.goal,
-    },
-    offer: {
-      task: input.goal,
-      solution: titles[locale],
-      composition: [
+    recommendation: {
+      concept_name: `${product.name[locale]} · ${experience.label[locale]}`,
+      why_it_fits: product.summary[locale],
+      physical_product_type: product.slug,
+      customer_action_after_tap: input.goal,
+      digital_experience_type: experience.id,
+      offer_title:
+        locale === "ru"
+          ? "Персональное предложение Touchform.md"
+          : locale === "ro"
+            ? "Ofertă personalizată Touchform.md"
+            : "Personalized Touchform.md offer",
+      offer_summary:
+        locale === "ru"
+          ? `Для «${input.business}»: физический touchpoint + ${experience.label.ru}, чтобы клиент сделал «${input.goal}».`
+          : locale === "ro"
+            ? `Pentru „${input.business}”: touchpoint fizic + ${experience.label.ro}, ca clientul să facă „${input.goal}”.`
+            : `For “${input.business}”: physical touchpoint + ${experience.label.en} so customers can “${input.goal}”.`,
+      offer_includes: [
         product.name[locale],
-        material.label[locale],
-        color.label[locale],
-        scenario.label[locale],
+        experience.label[locale],
+        "NFC + QR fallback",
+        direction.custom
+          ? locale === "ru"
+            ? "Индивидуальная смета"
+            : locale === "ro"
+              ? "Ofertă individuală"
+              : "Individual quote"
+          : `Tier pricing · qty ${qty}`,
       ],
-      expectedOutcome:
+      assumptions: [
         locale === "ru"
-          ? "Клиент совершает целевое действие одним тапом"
+          ? "Цвет/материал/логотип подтверждаются командой"
           : locale === "ro"
-            ? "Clientul face acțiunea dorită dintr-un tap"
-            : "Customer completes the target action in one tap",
-      nextSteps: [
-        locale === "ru"
-          ? "Сгенерировать визуал концепта"
-          : locale === "ro"
-            ? "Generează vizualul conceptului"
-            : "Generate a concept visual",
-        locale === "ru"
-          ? "Передать менеджеру в Telegram"
-          : locale === "ro"
-            ? "Trimite managerului în Telegram"
-            : "Hand off to manager on Telegram",
+            ? "Culoarea/materialul/logo se confirmă cu echipa"
+            : "Color/material/logo confirmed with the team",
+      ],
+      human_review_required: true,
+      alternative_ideas: alternatives,
+    },
+    design: {
+      geometry: direction.custom ? "custom-request" : STANDARD_REVIEW_STAND_ID,
+      view: "front-three-quarter",
+      primary_color: "black",
+      secondary_color: null,
+      material: direction.custom
+        ? "needs-human-review"
+        : "standard-catalog-option",
+      finish: null,
+      text: null,
+      logo_asset_id: null,
+      qr_enabled: true,
+      qr_destination_url: null,
+      quantity: qty,
+      reference_image_ids: [],
+      image_prompt_constraints: [
+        "front-three-quarter product-only view",
+        "quiet neutral background",
+        "concept mock-up — not manufacturing file",
       ],
     },
-    constraints: [
-      "Catalog SKUs only — no invented products",
-      "Visual concept ≠ production guarantee",
-    ],
-    unknowns: [
-      locale === "ru"
-        ? "Точный тираж и дедлайн"
-        : locale === "ro"
-          ? "Tirajul exact și termenul"
-          : "Exact quantity and deadline",
-      locale === "ru"
-        ? "Финальные бренд-цвета и файл логотипа"
-        : locale === "ro"
-          ? "Culorile brand și fișierul logo"
-          : "Final brand colors and logo file",
-    ],
-    approvalStatus: "needs_confirmation",
-    resultUrl: null,
-    priceHint: {
-      currency: "MDL",
-      from: product.basePriceFrom,
-      note:
+    commercial,
+    production: {
+      feasibility: direction.custom ? "needs-human-review" : "known-option",
+      known_catalog_facts: [
+        `catalog:${product.slug}`,
+        `experience:${experience.id}`,
+        ...(direction.custom
+          ? []
+          : ["pricing:standard-review-stand-tiers-v1"]),
+      ],
+      open_questions: [
         locale === "ru"
-          ? "Ориентир «от» до подтверждения менеджером"
+          ? "Точный тираж и дедлайн"
           : locale === "ro"
-            ? "Orientativ „de la” până la confirmarea managerului"
-            : "Provisional “from” until manager confirmation",
+            ? "Tirajul exact și termenul"
+            : "Exact quantity and deadline",
+        locale === "ru"
+          ? "Файл логотипа и бренд-цвета"
+          : locale === "ro"
+            ? "Fișier logo și culori brand"
+            : "Logo file and brand colors",
+        ...(product.dimensionsConfirmed
+          ? []
+          : [
+              locale === "ru"
+                ? "Финальные размеры — подтверждение производства"
+                : locale === "ro"
+                  ? "Dimensiuni finale — confirmare producție"
+                  : "Final dimensions — production confirmation",
+            ]),
+      ],
+    },
+    generation: {
+      attempt_number: 0,
+      max_attempts: 2,
+      status: "idle",
+      provider_model: null,
+      preview_asset_id: null,
     },
   };
 }
 
 export function llmConfigured() {
-  return Boolean(process.env.OPENAI_API_KEY);
+  return Boolean(
+    process.env.OPENAI_API_KEY ||
+      process.env.GOOGLE_GEMINI_API_KEY ||
+      process.env.AI_TEXT_PROVIDER,
+  );
+}
+
+export function consultSystemContext(locale: ConsultRequest["locale"]) {
+  return {
+    knowledge: knowledgeBrief(locale),
+    rules: [
+      "Never invent prices, materials, sizes, lead times or outcomes.",
+      "Use standard-review-stand-tiers-v1 only for standard-review-stand.",
+      "Custom products → price_type custom-quote.",
+      "Offer 2–3 distinct ideas when context allows.",
+      "Mark unknowns in production.open_questions.",
+      "schema_version must be 1.0",
+    ],
+  };
 }

@@ -17,6 +17,7 @@ export function ConsultantPanel({ locale }: { locale: "ro" | "ru" | "en" }) {
   const [business, setBusiness] = useState("");
   const [goal, setGoal] = useState("");
   const [context, setContext] = useState("");
+  const [quantity, setQuantity] = useState<number | "">("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [mode, setMode] = useState<string | null>(null);
@@ -31,7 +32,13 @@ export function ConsultantPanel({ locale }: { locale: "ro" | "ru" | "en" }) {
       const res = await fetch("/api/consult", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ locale, business, goal, context }),
+        body: JSON.stringify({
+          locale,
+          business,
+          goal,
+          context,
+          quantity: quantity === "" ? undefined : Number(quantity),
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "fail");
@@ -47,7 +54,10 @@ export function ConsultantPanel({ locale }: { locale: "ro" | "ru" | "en" }) {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
-      <form onSubmit={onSubmit} className="space-y-4 rounded-[1.75rem] bg-white p-5 shadow-[0_8px_30px_rgba(0,0,0,0.08)] md:p-7">
+      <form
+        onSubmit={onSubmit}
+        className="space-y-4 rounded-[1.75rem] bg-white p-5 shadow-[0_8px_30px_rgba(0,0,0,0.08)] md:p-7"
+      >
         <div className="space-y-2">
           <Label htmlFor="business">{t("business")}</Label>
           <Input
@@ -80,6 +90,20 @@ export function ConsultantPanel({ locale }: { locale: "ro" | "ru" | "en" }) {
             className="h-12 rounded-full"
           />
         </div>
+        <div className="space-y-2">
+          <Label htmlFor="qty">{t("quantity")}</Label>
+          <Input
+            id="qty"
+            type="number"
+            min={1}
+            value={quantity}
+            onChange={(e) =>
+              setQuantity(e.target.value === "" ? "" : Number(e.target.value))
+            }
+            placeholder="2"
+            className="h-12 rounded-full"
+          />
+        </div>
         <Button
           type="submit"
           disabled={loading}
@@ -98,9 +122,7 @@ export function ConsultantPanel({ locale }: { locale: "ro" | "ru" | "en" }) {
       </form>
 
       <div className="space-y-4 rounded-[1.75rem] bg-white p-5 shadow-[0_8px_30px_rgba(0,0,0,0.08)] md:p-7">
-        {!concept && (
-          <p className="text-[var(--tf-body)]">{t("subtitle")}</p>
-        )}
+        {!concept && <p className="text-[var(--tf-body)]">{t("subtitle")}</p>}
         {concept && (
           <>
             <div>
@@ -108,12 +130,16 @@ export function ConsultantPanel({ locale }: { locale: "ro" | "ru" | "en" }) {
                 {t("ideas")}
               </p>
               <h2 className="mt-2 font-[family-name:var(--font-display)] text-2xl font-bold lowercase tracking-tight">
-                {concept.concept.title}
+                {concept.recommendation.concept_name}
               </h2>
-              <p className="mt-2 text-[var(--tf-body)]">{concept.concept.summary}</p>
-              <ul className="mt-4 list-disc space-y-1 pl-5 text-sm text-[var(--tf-body)]">
-                {concept.concept.whyItFits.map((item) => (
-                  <li key={item}>{item}</li>
+              <p className="mt-2 text-[var(--tf-body)]">
+                {concept.recommendation.why_it_fits}
+              </p>
+              <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-[var(--tf-body)]">
+                {concept.recommendation.alternative_ideas.map((idea) => (
+                  <li key={idea.title}>
+                    <strong>{idea.title}</strong> — {idea.why}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -121,20 +147,31 @@ export function ConsultantPanel({ locale }: { locale: "ro" | "ru" | "en" }) {
               <p className="text-xs uppercase tracking-[0.18em] text-[var(--tf-meta)]">
                 {t("offer")}
               </p>
-              <p className="mt-2 text-sm text-[var(--tf-ink)]">{concept.offer.solution}</p>
+              <p className="mt-2 text-sm font-medium text-[var(--tf-ink)]">
+                {concept.recommendation.offer_title}
+              </p>
+              <p className="mt-1 text-sm text-[var(--tf-body)]">
+                {concept.recommendation.offer_summary}
+              </p>
               <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-[var(--tf-body)]">
-                {concept.offer.composition.map((item) => (
+                {concept.recommendation.offer_includes.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
+              <p className="mt-3 text-sm text-[var(--tf-ink)]">
+                {concept.commercial.price_type === "fixed-tier" &&
+                concept.commercial.unit_price_mdl != null
+                  ? `${concept.commercial.unit_price_mdl} MDL/u · total ${concept.commercial.total_price_mdl} MDL`
+                  : t("customQuote")}
+              </p>
             </div>
-            {concept.unknowns.length > 0 && (
+            {concept.production.open_questions.length > 0 && (
               <div>
                 <p className="text-xs uppercase tracking-[0.18em] text-[var(--tf-meta)]">
                   {t("unknowns")}
                 </p>
                 <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-[var(--tf-body)]">
-                  {concept.unknowns.map((item) => (
+                  {concept.production.open_questions.map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
@@ -158,6 +195,7 @@ export function ConsultantPanel({ locale }: { locale: "ro" | "ru" | "en" }) {
             </div>
             {showHandoff && (
               <div className="border-t pt-4">
+                <p className="mb-3 text-xs text-[var(--tf-meta)]">{t("consent")}</p>
                 <LeadForm concept={concept} />
               </div>
             )}

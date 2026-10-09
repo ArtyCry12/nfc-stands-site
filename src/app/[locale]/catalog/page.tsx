@@ -2,7 +2,11 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ProductVisual } from "@/components/product-visual";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
-import { catalog } from "@/lib/catalog";
+import {
+  catalog,
+  formatStandardTierTable,
+  standardStandUnitFrom,
+} from "@/lib/catalog";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -12,6 +16,8 @@ export default async function CatalogPage({ params }: Props) {
   const t = await getTranslations("catalog");
   const n = await getTranslations("nav");
   const loc = locale as Locale;
+  const tiers = formatStandardTierTable(loc);
+  const fromPrice = standardStandUnitFrom(1);
 
   return (
     <div className="mx-auto max-w-6xl px-4 pb-16 pt-28 md:px-6">
@@ -19,6 +25,12 @@ export default async function CatalogPage({ params }: Props) {
         {t("title")}
       </h1>
       <p className="mt-3 max-w-2xl text-[var(--tf-body)]">{t("subtitle")}</p>
+      <div className="mt-4 rounded-2xl bg-white p-4 text-sm shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+        <p className="font-medium">{t("tiersTitle")}</p>
+        <p className="mt-1 text-[var(--tf-body)]">
+          {tiers.rows.join(" · ")}
+        </p>
+      </div>
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {catalog.map((product) => (
           <article
@@ -32,8 +44,8 @@ export default async function CatalogPage({ params }: Props) {
               </h2>
               <p className="text-sm text-[var(--tf-body)]">{product.summary[loc]}</p>
               <p className="text-sm font-medium">
-                {product.basePriceFrom != null
-                  ? `${t("from")} ${product.basePriceFrom} ${t("currency")}`
+                {product.pricing === "standard-tiers"
+                  ? `${t("from")} ${fromPrice} MDL / ${t("unit")}`
                   : t("onRequest")}
               </p>
               <div className="flex flex-wrap gap-2">

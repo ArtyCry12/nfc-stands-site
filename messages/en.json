@@ -5,14 +5,15 @@
     "defaultDescription": "Physical NFC products and digital scenarios for businesses in Moldova and Romania. AI consultant, configurator, and Telegram handoff."
   },
   "nav": {
-    "catalog": "Catalog",
+    "catalog": "Products",
     "solutions": "Solutions",
     "consultant": "AI consultant",
-    "concept": "Concept",
+    "concept": "AI Studio",
     "about": "About",
     "contact": "Contact",
     "cta": "Talk to us",
-    "configure": "Configure"
+    "configure": "Configure",
+    "cases": "Cases"
   },
   "home": {
     "eyebrow": "Local NFC brand · Moldova & Romania",
@@ -32,7 +33,7 @@
     "why3Title": "Telegram handoff",
     "why3Body": "Configuration, concept, and image reach the manager with context intact.",
     "catalogTitle": "starter assortment",
-    "catalogNote": "“From” prices are provisional until the founder locks the price list.",
+    "catalogNote": "Standard stand: 1–2 @ 450 MDL; 3–6 @ 400; 7–10 @ 350; 11–19 @ 300; 20+ @ 250. Custom = individually quoted.",
     "faqTitle": "common questions",
     "leadTitle": "send the idea to a manager",
     "leadSub": "We reply in Telegram. No cart, no fake checkout."
@@ -42,12 +43,14 @@
     "subtitle": "Review stands, plaques, stickers, and digital kits. Configure and send via Telegram.",
     "from": "from",
     "currency": "MDL",
-    "onRequest": "on request",
+    "onRequest": "individually quoted",
     "view": "Details",
     "configure": "Configure",
     "materials": "Materials",
     "scenarios": "Scenarios",
-    "unknownPrice": "Final price after branding and quantity"
+    "unknownPrice": "Final price after branding and quantity",
+    "unit": "unit",
+    "tiersTitle": "Standard stand tiers"
   },
   "configure": {
     "title": "configurator",
@@ -57,9 +60,16 @@
     "branding": "Branding",
     "scenario": "Digital scenario",
     "estimate": "Estimate",
-    "estimateNote": "Internal estimate — not a firm quote until a manager confirms.",
+    "estimateNote": "Approved tiers apply only to the standard stand. Custom work is individually quoted.",
     "cta": "Send to Telegram",
-    "summary": "Configuration summary"
+    "summary": "Configuration summary",
+    "quantity": "Quantity",
+    "destination": "Destination URL",
+    "qrNote": "QR is generated from a validated URL — not AI-drawn.",
+    "colorNote": "Visual colors are confirmed with production.",
+    "total": "Total",
+    "orderTelegram": "Order via Telegram",
+    "orderTelegramNote": "Opens a prefilled message — you press Send. The link does not attach an image."
   },
   "consultant": {
     "title": "ai consultant",
@@ -78,7 +88,10 @@
     "offer": "Personalized offer",
     "unknowns": "Confirm with manager",
     "toConcept": "Generate visual",
-    "toTelegram": "Send to manager"
+    "toTelegram": "Send concept to manager",
+    "quantity": "Quantity (optional)",
+    "customQuote": "Individual quote — human confirmation",
+    "consent": "By sending, you agree the brief/concept is shared with the team via Telegram."
   },
   "concept": {
     "title": "concept studio",
@@ -88,9 +101,10 @@
     "limitHit": "Both generations used. Continue with a manager in Telegram — context is kept.",
     "loading": "Rendering the product…",
     "fallbackNotice": "No image key — returning a realistic SVG product stub.",
-    "visualNote": "The image does not certify 1:1 manufacturability. Production spec is separate.",
+    "visualNote": "Concept preview — final materials, dimensions, quote and production design confirmed by our team.",
     "error": "Generation failed.",
-    "needConcept": "Start with the consultant to obtain a valid JSON contract."
+    "needConcept": "Start with the consultant to obtain a valid JSON contract.",
+    "consent": "By sending, you agree to share the image and brief with the team via Telegram."
   },
   "solutions": {
     "title": "solutions",
@@ -150,5 +164,9 @@
   "footer": {
     "tagline": "Local NFC brand",
     "rights": "Touchform.md · Chișinău"
+  },
+  "cases": {
+    "title": "cases",
+    "subtitle": "Real evidence — no invented metrics."
   }
 }

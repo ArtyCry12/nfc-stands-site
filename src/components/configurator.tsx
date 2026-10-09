@@ -3,8 +3,10 @@
 import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import type { CatalogProduct } from "@/lib/catalog";
-import { estimatePrice } from "@/lib/catalog";
+import { priceStandardReviewStand } from "@/lib/pricing";
+import { buildTelegramShareUrl } from "@/lib/telegram";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -19,71 +21,56 @@ export function Configurator({ product }: { product: CatalogProduct }) {
   const t = useTranslations("configure");
   const tc = useTranslations("catalog");
   const locale = useLocale() as "ro" | "ru" | "en";
-  const [material, setMaterial] = useState(product.materials[0].id);
-  const [color, setColor] = useState(product.colors[0].id);
-  const [finish, setFinish] = useState(product.finishes[0].id);
-  const [branding, setBranding] = useState(product.branding[0].id);
-  const [scenario, setScenario] = useState(product.scenarios[0].id);
-
-  const price = useMemo(
-    () => estimatePrice(product, { material, color, finish, branding, scenario }),
-    [product, material, color, finish, branding, scenario],
+  const [color, setColor] = useState(product.colors[0]?.id ?? "black");
+  const [experience, setExperience] = useState(
+    product.experiences[0]?.id ?? "google-reviews",
   );
+  const [quantity, setQuantity] = useState(2);
+  const [destination, setDestination] = useState("");
 
-  const labelOf = (
-    list: CatalogProduct["materials"],
-    id: string,
-  ) => list.find((o) => o.id === id)?.label[locale] ?? id;
+  const isStandard = product.pricing === "standard-tiers";
+  const priced = useMemo(() => {
+    if (!isStandard) return null;
+    try {
+      return priceStandardReviewStand(quantity);
+    } catch {
+      return null;
+    }
+  }, [isStandard, quantity]);
+
+  const colorLabel =
+    product.colors.find((c) => c.id === color)?.label[locale] ?? color;
+  const expLabel =
+    product.experiences.find((e) => e.id === experience)?.label[locale] ??
+    experience;
 
   const summary = [
     product.name[locale],
-    `${t("material")}: ${labelOf(product.materials, material)}`,
-    `${t("color")}: ${labelOf(product.colors, color)}`,
-    `${t("finish")}: ${labelOf(product.finishes, finish)}`,
-    `${t("branding")}: ${labelOf(product.branding, branding)}`,
-    `${t("scenario")}: ${labelOf(product.scenarios, scenario)}`,
-    price != null
-      ? `${t("estimate")}: ${tc("from")} ${price} ${tc("currency")}`
+    `${t("color")}: ${colorLabel}`,
+    `${t("scenario")}: ${expLabel}`,
+    destination ? `URL: ${destination}` : null,
+    isStandard && priced
+      ? `${t("estimate")}: ${priced.unitPriceMdl} MDL/u × ${priced.quantity} = ${priced.totalPriceMdl} MDL (${priced.priceSource})`
       : tc("onRequest"),
-  ].join("\n");
+    "QR will be code-generated from the validated URL (not AI-drawn).",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const shareUrl = buildTelegramShareUrl(
+    `Touchform.md order\n${summary}\n(Please send this message to complete the enquiry.)`,
+  );
 
   const accent =
-    color.includes("coral") ? "#FF7A45" : color.includes("white") ? "#F4F4F4" : "#FF7A45";
-
-  function Field({
-    label,
-    value,
-    onChange,
-    options,
-  }: {
-    label: string;
-    value: string;
-    onChange: (v: string) => void;
-    options: CatalogProduct["materials"];
-  }) {
-    return (
-      <div className="space-y-2">
-        <Label>{label}</Label>
-        <Select
-          value={value}
-          onValueChange={(next) => {
-            if (typeof next === "string") onChange(next);
-          }}
-        >
-          <SelectTrigger className="h-12 w-full rounded-full">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {options.map((o) => (
-              <SelectItem key={o.id} value={o.id}>
-                {o.label[locale]}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-    );
-  }
+    color === "yellow"
+      ? "#E6B800"
+      : color === "blue"
+        ? "#2B4C7E"
+        : color === "wood"
+          ? "#C4A574"
+          : color === "white"
+            ? "#F4F4F4"
+            : "#FF7A45";
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
@@ -95,26 +82,123 @@ export function Configurator({ product }: { product: CatalogProduct }) {
           {product.name[locale]}
         </h1>
         <p className="text-[var(--tf-body)]">{product.summary[locale]}</p>
-        <Field label={t("material")} value={material} onChange={setMaterial} options={product.materials} />
-        <Field label={t("color")} value={color} onChange={setColor} options={product.colors} />
-        <Field label={t("finish")} value={finish} onChange={setFinish} options={product.finishes} />
-        <Field label={t("branding")} value={branding} onChange={setBranding} options={product.branding} />
-        <Field label={t("scenario")} value={scenario} onChange={setScenario} options={product.scenarios} />
+
+        <div className="space-y-2">
+          <Label>{t("color")}</Label>
+          <Select
+            value={color}
+            onValueChange={(next) => {
+              if (typeof next === "string") setColor(next);
+            }}
+          >
+            <SelectTrigger className="h-12 w-full rounded-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {product.colors.map((o) => (
+                <SelectItem key={o.id} value={o.id}>
+                  {o.label[locale]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-[var(--tf-meta)]">{t("colorNote")}</p>
+        </div>
+
+        <div className="space-y-2">
+          <Label>{t("scenario")}</Label>
+          <Select
+            value={experience}
+            onValueChange={(next) => {
+              if (typeof next === "string") setExperience(next);
+            }}
+          >
+            <SelectTrigger className="h-12 w-full rounded-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {product.experiences.map((o) => (
+                <SelectItem key={o.id} value={o.id}>
+                  {o.label[locale]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="dest">{t("destination")}</Label>
+          <Input
+            id="dest"
+            type="url"
+            placeholder="https://"
+            value={destination}
+            onChange={(e) => setDestination(e.target.value)}
+            className="h-12 rounded-full"
+          />
+          <p className="text-xs text-[var(--tf-meta)]">{t("qrNote")}</p>
+        </div>
+
+        {isStandard && (
+          <div className="space-y-2">
+            <Label htmlFor="qty">{t("quantity")}</Label>
+            <Input
+              id="qty"
+              type="number"
+              min={1}
+              value={quantity}
+              onChange={(e) => setQuantity(Math.max(1, Number(e.target.value) || 1))}
+              className="h-12 rounded-full"
+            />
+          </div>
+        )}
+
         <div className="rounded-2xl bg-[var(--tf-stage-soft)] p-4">
           <p className="text-xs uppercase tracking-[0.18em] text-[var(--tf-meta)]">
             {t("estimate")}
           </p>
-          <p className="mt-1 font-[family-name:var(--font-display)] text-2xl font-bold">
-            {price != null
-              ? `${tc("from")} ${price} ${tc("currency")}`
-              : tc("onRequest")}
-          </p>
+          {isStandard && priced ? (
+            <>
+              <p className="mt-1 font-[family-name:var(--font-display)] text-2xl font-bold">
+                {priced.unitPriceMdl} MDL / {tc("unit")}
+              </p>
+              <p className="text-sm text-[var(--tf-ink)]">
+                {t("total")}: {priced.totalPriceMdl} MDL ({priced.quantity} ×{" "}
+                {priced.unitPriceMdl})
+              </p>
+            </>
+          ) : (
+            <p className="mt-1 font-[family-name:var(--font-display)] text-2xl font-bold">
+              {tc("onRequest")}
+            </p>
+          )}
           <p className="mt-1 text-xs text-[var(--tf-meta)]">{t("estimateNote")}</p>
         </div>
-        <div>
-          <p className="mb-2 text-sm font-medium">{t("summary")}</p>
-          <LeadForm configSummary={summary} />
-        </div>
+
+        {isStandard ? (
+          <div className="space-y-3">
+            <a
+              href={shareUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex h-12 w-full items-center justify-center rounded-full bg-[var(--tf-ink)] text-sm font-semibold text-white"
+            >
+              {t("orderTelegram")}
+            </a>
+            <p className="text-xs text-[var(--tf-meta)]">{t("orderTelegramNote")}</p>
+            <details className="text-sm">
+              <summary className="cursor-pointer font-medium">{t("summary")}</summary>
+              <pre className="mt-2 whitespace-pre-wrap rounded-xl bg-[var(--background)] p-3 text-xs">
+                {summary}
+              </pre>
+            </details>
+          </div>
+        ) : (
+          <div>
+            <p className="mb-2 text-sm font-medium">{t("summary")}</p>
+            <LeadForm configSummary={summary} />
+          </div>
+        )}
       </div>
     </div>
   );

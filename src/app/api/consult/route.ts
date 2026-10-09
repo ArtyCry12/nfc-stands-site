@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
-import { buildMockConcept, llmConfigured } from "@/lib/consult";
+import { catalog } from "@/lib/catalog";
 import {
   ConceptContractSchema,
   ConsultRequestSchema,
 } from "@/lib/concept-schema";
-import { catalog } from "@/lib/catalog";
+import {
+  buildMockConcept,
+  consultSystemContext,
+  llmConfigured,
+} from "@/lib/consult";
+import { priceStandardReviewStand } from "@/lib/pricing";
 
 export const runtime = "nodejs";
 
@@ -33,31 +38,30 @@ export async function POST(request: Request) {
       const { generateText } = await import("ai");
       const { createOpenAI } = await import("@ai-sdk/openai");
       const openai = createOpenAI({
-        apiKey: process.env.OPENAI_API_KEY,
+        apiKey: process.env.OPENAI_API_KEY || process.env.GOOGLE_GEMINI_API_KEY,
         baseURL: process.env.OPENAI_BASE_URL || undefined,
       });
-      const model = process.env.OPENAI_MODEL || "gpt-4o-mini";
-      const catalogBrief = catalog.map((p) => ({
-        slug: p.slug,
-        name: p.name[parsed.data.locale],
-        basePriceFrom: p.basePriceFrom,
-        category: p.category,
-        scenarios: p.scenarios.map((s) => s.id),
-        dimensions: p.dimensions,
-      }));
+      const model =
+        process.env.AI_TEXT_MODEL ||
+        process.env.OPENAI_MODEL ||
+        "gpt-4o-mini";
+      const ctx = consultSystemContext(parsed.data.locale);
+      const samplePrice = priceStandardReviewStand(parsed.data.quantity ?? 2);
 
       const { text } = await generateText({
         model: openai(model),
         prompt: [
-          "You are the Touchform.md product consultant for Moldova/Romania.",
-          "Return ONLY a JSON object for ConceptContract v1.",
-          "Required keys: version(=\"1\"), conceptId(uuid), locale, business{type,audience?,locationHint?}, problem, concept{title,summary,whyItFits[]}, physicalProduct{catalogSlug,type,dimensions,material,color,shape,finish}, branding{brandColors[],logoRequired,text,qrOptional}, placement, digitalScenario{id,label,targetAction}, offer{task,solution,composition[],expectedOutcome,nextSteps[]}, constraints[], unknowns[], approvalStatus(draft|ready_for_manager|needs_confirmation), resultUrl, priceHint?{currency:\"MDL\",from,note}.",
-          `Use only catalog slugs from: ${JSON.stringify(catalogBrief)}`,
-          "Do not invent SKUs or firm prices; put unknowns in unknowns[].",
+          "You are the Touchform.md product consultant (Moldova/Romania).",
+          "Return ONLY JSON matching ConceptContract schema_version 1.0.",
+          `Knowledge: ${JSON.stringify(ctx)}`,
+          `Catalog slugs: ${catalog.map((p) => p.slug).join(", ")}`,
+          `Sample standard pricing for qty ${samplePrice.quantity}: unit ${samplePrice.unitPriceMdl} total ${samplePrice.totalPriceMdl} source ${samplePrice.priceSource}`,
+          "Offer 2–3 alternative_ideas. Never invent firm custom prices or dimensions.",
           `locale=${parsed.data.locale}`,
           `business=${parsed.data.business}`,
           `goal=${parsed.data.goal}`,
           `context=${parsed.data.context || ""}`,
+          `quantity=${parsed.data.quantity ?? ""}`,
         ].join("\n"),
       });
 
@@ -67,7 +71,37 @@ export async function POST(request: Request) {
         const candidate = JSON.parse(text.slice(jsonStart, jsonEnd + 1));
         const validated = ConceptContractSchema.safeParse(candidate);
         if (validated.success) {
-          concept = validated.data;
+          // Re-derive standard pricing from rules — never trust model prices.
+          if (
+            validated.data.recommendation.physical_product_type ===
+              "standard-review-stand" &&
+            validated.data.commercial.price_type === "fixed-tier"
+          ) {
+            const qty = validated.data.design.quantity ?? 2;
+            const priced = priceStandardReviewStand(qty);
+            concept = {
+              ...validated.data,
+              commercial: {
+                price_type: "fixed-tier",
+                unit_price_mdl: priced.unitPriceMdl,
+                total_price_mdl: priced.totalPriceMdl,
+                price_source: priced.priceSource,
+              },
+            };
+          } else {
+            concept = {
+              ...validated.data,
+              commercial:
+                validated.data.commercial.price_type === "fixed-tier"
+                  ? {
+                      price_type: "custom-quote",
+                      unit_price_mdl: null,
+                      total_price_mdl: null,
+                      price_source: null,
+                    }
+                  : validated.data.commercial,
+            };
+          }
           mode = "llm";
         }
       }
