@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LeadForm } from "@/components/lead-form";
+import { ProductVisual } from "@/components/product-visual";
 import { QrPreview } from "@/components/qr-preview";
 
 const STORAGE_KEY = "tf_concept_v1";
@@ -88,11 +89,19 @@ export function ConceptStudio() {
             alt={concept?.recommendation.concept_name || "concept"}
             className="h-full w-full object-cover"
           />
+        ) : concept ? (
+          <ProductVisual
+            productType={concept.recommendation.physical_product_type}
+            colorId={concept.design.primary_color || "black"}
+            material={concept.design.material}
+            brandLabel="touchform.md"
+            destinationUrl={destUrl || concept.design.qr_destination_url || ""}
+            caption={concept.recommendation.concept_name}
+            className="min-h-[320px]"
+          />
         ) : (
           <div className="flex min-h-[320px] items-center justify-center p-8 text-center text-white/60">
-            {concept
-              ? concept.recommendation.concept_name
-              : t("needConcept")}
+            {t("needConcept")}
           </div>
         )}
       </div>

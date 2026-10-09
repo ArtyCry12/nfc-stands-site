@@ -80,7 +80,12 @@ export default async function HomePage({ params }: Props) {
                 href={`/catalog/${product.slug}`}
                 className="group overflow-hidden rounded-[1.25rem] border border-transparent bg-[var(--background)] transition hover:border-[var(--tf-ink)]/10"
               >
-                <ProductVisual label={product.slug} className="rounded-none" />
+                <ProductVisual
+                  productType={product.slug}
+                  colorId={product.colors[0]?.id ?? "black"}
+                  label={product.slug}
+                  className="rounded-none"
+                />
                 <div className="p-4">
                   <h3 className="font-[family-name:var(--font-display)] text-lg font-semibold lowercase">
                     {product.name[loc]}

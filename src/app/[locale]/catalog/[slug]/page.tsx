@@ -29,7 +29,12 @@ export default async function ProductPage({ params }: Props) {
   return (
     <div className="mx-auto grid max-w-6xl gap-8 px-4 pb-16 pt-28 md:grid-cols-2 md:px-6">
       <div className="overflow-hidden rounded-[1.75rem] bg-white p-3 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
-        <ProductVisual label={product.slug} className="rounded-[1.25rem]" />
+        <ProductVisual
+          productType={product.slug}
+          colorId={product.colors[0]?.id ?? "black"}
+          label={product.slug}
+          className="rounded-[1.25rem]"
+        />
       </div>
       <div className="space-y-4">
         <h1 className="font-[family-name:var(--font-display)] text-4xl font-bold lowercase tracking-tight">

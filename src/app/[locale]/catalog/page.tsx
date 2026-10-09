@@ -37,7 +37,12 @@ export default async function CatalogPage({ params }: Props) {
             key={product.slug}
             className="overflow-hidden rounded-[1.75rem] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)]"
           >
-            <ProductVisual label={product.slug} className="rounded-none" />
+            <ProductVisual
+              productType={product.slug}
+              colorId={product.colors[0]?.id ?? "black"}
+              label={product.slug}
+              className="rounded-none"
+            />
             <div className="space-y-3 p-5">
               <h2 className="font-[family-name:var(--font-display)] text-xl font-semibold lowercase">
                 {product.name[loc]}

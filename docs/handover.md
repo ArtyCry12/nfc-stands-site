@@ -1,6 +1,6 @@
 # Touchform.md — Handover / runbook
 
-Updated after acceptance batch (QR, multi-turn eval, concept store, logos) — 2026-10-09.
+Updated after layered product renderer — 2026-10-09.
 
 ## Run
 
@@ -8,7 +8,7 @@ Updated after acceptance batch (QR, multi-turn eval, concept store, logos) — 2
 cp .env.example .env.local
 npm install
 npm run dev   # http://127.0.0.1:4317
-npm test      # pricing + QR decode + consultant eval (5 dialogs)
+npm test      # pricing + QR decode + product-layers + consultant eval (6)
 ```
 
 Branch: `cursor/touchform-site-ef45`  
@@ -41,23 +41,24 @@ See `.env.example`. Critical:
 | `AI_GENERATION_KILL_SWITCH` | Disable images, keep site |
 | `AI_CONCEPT_TTL_HOURS` | Concept file TTL (default 72) |
 | `OPENAI_*` / `GOOGLE_GEMINI_API_KEY` / `AI_TEXT_*` | Live consultant |
-| `AI_IMAGE_*` / Gemini image keys | Live concept images |
+| `AI_IMAGE_*` / Gemini image keys | Live concept images (optional; layered SVG used without) |
 | `TELEGRAM_BOT_TOKEN` + `TELEGRAM_MANAGER_CHAT_ID` | Real `sendPhoto` |
 | `TELEGRAM_CUSTOMER_CHAT_LINK` | Post-handoff human link |
 
 ## What’s done (no paid keys)
 
 - Code-generated scannable QR (`/api/qr`, configurator + concept studio, jsQR unit decode)
-- Multi-turn consultant UI (`/api/consult/turn` + `ConsultantPanel` history) + eval suite 5/5
+- Multi-turn consultant UI (`/api/consult/turn` + history) + eval suite 6/6
 - Persistent concept store under `.data/concepts/` + `/api/concepts/[id]`
 - IP burst + daily image cap + session cookie max-2 + kill switch
-- Three logo SVGs; **Threshold** in chrome (`mark.svg` / favicon); ADR documented
-- Build + `npm test` green; routes: products aliases, cases, configure
+- Three logo SVGs; **Threshold** in chrome; ADR documented
+- **Deterministic layered product renderer** (`src/lib/product-layers.ts` `layered-v1`): stand + material/color + branding + QR overlay — used in catalog / configure / concept + `/api/generate` (mode `layered_svg`). Geometry stable across iterations.
+- Build + `npm test` green; Try Live on `:4317`
 
 ## Needs founder (§13 gates)
 
 - Telegram bot token + manager chat ID (live image send)
-- Paid LLM/image spend / budget ceiling
+- Paid LLM/image spend / budget ceiling (optional — layered preview works without)
 - Final logo / production identity (Threshold is interim chrome pick)
 - Production deploy / DNS
 - Name/domain/trademark pre-launch check evidence
@@ -67,8 +68,7 @@ See `.env.example`. Critical:
 ## Still open (non-blocking for this slice)
 
 - Live Telegram `sendPhoto` evidence
-- Paid LLM / image path
-- Layered product photo renderer (QR is real; stand art still CSS/stub)
+- Paid LLM / image path (enhancement over layered SVG)
 - Supabase swap for `.data/` when approved
 - Preview deploy (Origin `agent_temp` blocks PR forge)
 - LLM-judge language-quality evals

@@ -1,51 +1,112 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import {
+  buildLayeredProductDataUrl,
+  qrOverlayStyle,
+} from "@/lib/product-layers";
+
 type Props = {
-  accent?: string;
+  productType?: string;
+  colorId?: string;
+  material?: string | null;
+  brandLabel?: string;
   label?: string;
+  destinationUrl?: string;
+  /** Pre-fetched QR data URL (skips internal fetch when provided). */
+  qrSrc?: string | null;
   className?: string;
+  caption?: string;
 };
 
-/** CSS-only NFC stand silhouette for hero / catalog without stock photos. */
+/**
+ * Layered product photo (stand + material/color + branding + QR plate).
+ * Replaces the old CSS silhouette stub. Geometry is shared with generate-visual.
+ */
 export function ProductVisual({
-  accent = "#FF7A45",
-  label = "nfc stand",
+  productType = "standard-review-stand",
+  colorId = "black",
+  material = null,
+  brandLabel = "touchform.md",
+  label,
+  destinationUrl = "",
+  qrSrc: qrSrcProp = null,
   className = "",
+  caption,
 }: Props) {
+  const [fetchedQr, setFetchedQr] = useState<string | null>(null);
+  const overlay = qrOverlayStyle();
+
+  const { dataUrl } = useMemo(
+    () =>
+      buildLayeredProductDataUrl({
+        productType,
+        colorId,
+        material,
+        brandLabel,
+        showBrandMark: true,
+        reserveQrPlate: true,
+        caption: caption || label || `${productType} · ${colorId}`,
+      }),
+    [productType, colorId, material, brandLabel, caption, label],
+  );
+
+  useEffect(() => {
+    if (qrSrcProp) {
+      setFetchedQr(null);
+      return;
+    }
+    let cancelled = false;
+    setFetchedQr(null);
+    const url = destinationUrl.trim();
+    if (!url) return;
+
+    fetch("/api/qr", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url }),
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "QR failed");
+        if (!cancelled) setFetchedQr(data.pngDataUrl as string);
+      })
+      .catch(() => {
+        if (!cancelled) setFetchedQr(null);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [destinationUrl, qrSrcProp]);
+
+  const qrSrc = qrSrcProp || fetchedQr;
+
   return (
     <div
-      className={`relative flex aspect-[4/3] items-end justify-center overflow-hidden bg-[var(--tf-photo)] ${className}`}
+      className={`relative aspect-[4/3] overflow-hidden bg-[var(--tf-photo)] ${className}`}
       aria-hidden
     >
-      <div
-        className="absolute inset-0 opacity-40"
-        style={{
-          background:
-            "radial-gradient(circle at 30% 20%, rgba(255,122,69,0.35), transparent 45%), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.08), transparent 40%)",
-        }}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={dataUrl}
+        alt=""
+        className="absolute inset-0 h-full w-full object-cover"
       />
-      <div className="relative mb-[12%] w-[46%] max-w-[220px]">
-        <div
-          className="mx-auto h-3 w-[70%] rounded-t-sm"
-          style={{ background: accent }}
-        />
-        <div
-          className="relative mx-auto aspect-[3/4] w-full rounded-sm shadow-2xl"
+      {qrSrc && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={qrSrc}
+          alt=""
+          className="pointer-events-none absolute object-contain"
           style={{
-            background: `linear-gradient(160deg, #2a2a2a 0%, #111 55%, ${accent}22 100%)`,
-            border: `1px solid ${accent}`,
+            left: overlay.left,
+            top: overlay.top,
+            width: overlay.width,
+            height: overlay.height,
           }}
-        >
-          <div className="absolute left-1/2 top-[28%] h-14 w-14 -translate-x-1/2 rounded-full border-2 border-white/80">
-            <div
-              className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full"
-              style={{ background: accent }}
-            />
-          </div>
-          <p className="absolute bottom-4 left-0 right-0 text-center font-[family-name:var(--font-display)] text-[10px] uppercase tracking-[0.2em] text-white/50">
-            {label}
-          </p>
-        </div>
-        <div className="mx-auto h-2 w-[85%] rounded-b-md bg-black/60" />
-      </div>
+        />
+      )}
     </div>
   );
 }

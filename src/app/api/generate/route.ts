@@ -112,7 +112,7 @@ export async function POST(request: Request) {
     }
 
     const configured = imageConfigured();
-    const visual = buildProductSvg(conceptParsed.data);
+    const visual = await buildProductSvg(conceptParsed.data);
 
     current.generations += 1;
     await writeSession(current);
@@ -130,8 +130,10 @@ export async function POST(request: Request) {
         attempt_number: current.generations,
         max_attempts: 2 as const,
         status: "succeeded" as const,
-        provider_model: configured ? "pending-provider" : "svg_stub",
-        preview_asset_id: `svg:${conceptParsed.data.lead_id}:${current.generations}`,
+        provider_model: configured
+          ? "pending-provider"
+          : visual.mode,
+        preview_asset_id: `layered:${conceptParsed.data.lead_id}:${current.generations}`,
       },
     };
 

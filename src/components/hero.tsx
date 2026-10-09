@@ -66,7 +66,12 @@ export function Hero() {
 
         <div className="relative animate-tf-fade">
           <div className="overflow-hidden rounded-[2px]">
-            <ProductVisual label="touchform" />
+            <ProductVisual
+              productType="standard-review-stand"
+              colorId="black"
+              brandLabel="touchform.md"
+              label="touchform"
+            />
           </div>
           <div className="mt-3 flex items-center justify-between text-xs uppercase tracking-[0.18em] text-white/45">
             <span>{t(CONTEXTS[index])}</span>

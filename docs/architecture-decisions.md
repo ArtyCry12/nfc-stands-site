@@ -85,6 +85,10 @@ Three strategic alternatives under `public/brand/`:
 
 Destinations validated server-side (`src/lib/qr.ts`). PNG/SVG via `/api/qr`. Configurator + concept studio show live previews. Unit test decodes PNG with jsQR to prove scannability. AI image stubs never draw functional QR.
 
+## Layered product renderer
+
+`src/lib/product-layers.ts` (`layered-v1`) composes deterministic SVG layers: stage, stand silhouette (per SKU), material/color surface, Threshold branding, QR plate. Geometry constants stay fixed across iterations; only fills/overlays change. Used by `ProductVisual` (catalog / configure / concept live preview) and `/api/generate` (bakes scannable QR modules when destination is set). Mode `layered_svg` — no paid image API required.
+
 ## Persistence & limits
 
 File-backed store under `.data/` (gitignored): concepts by `lead_id`, session quotas, daily image counter. Burst limits per IP for consult/generate/QR. Cookie session still enforces max 2 images + chat turns; persistence survives reload within TTL (`AI_CONCEPT_TTL_HOURS`, default 72).

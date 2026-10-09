@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start -p 4317 -H 127.0.0.1",
     "lint": "eslint",
-    "test": "tsx src/lib/pricing.test.ts && tsx src/lib/qr.test.ts && tsx scripts/consultant-eval.ts",
+    "test": "tsx src/lib/pricing.test.ts && tsx src/lib/qr.test.ts && tsx src/lib/product-layers.test.ts && tsx scripts/consultant-eval.ts",
     "test:eval": "tsx scripts/consultant-eval.ts"
   },
   "dependencies": {

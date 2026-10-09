@@ -62,21 +62,18 @@ export function Configurator({ product }: { product: CatalogProduct }) {
     `Touchform.md order\n${summary}\n(Please send this message to complete the enquiry.)`,
   );
 
-  const accent =
-    color === "yellow"
-      ? "#E6B800"
-      : color === "blue"
-        ? "#2B4C7E"
-        : color === "wood"
-          ? "#C4A574"
-          : color === "white"
-            ? "#F4F4F4"
-            : "#FF7A45";
-
   return (
     <div className="grid gap-6 lg:grid-cols-2">
       <div className="overflow-hidden rounded-[1.75rem] bg-white p-3 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
-        <ProductVisual accent={accent} label={product.slug} className="rounded-[1.25rem]" />
+        <ProductVisual
+          productType={product.slug}
+          colorId={color}
+          brandLabel="touchform.md"
+          label={product.slug}
+          destinationUrl={destination}
+          className="rounded-[1.25rem]"
+          caption={`${product.name[locale]} · ${colorLabel}`}
+        />
       </div>
       <div className="space-y-4 rounded-[1.75rem] bg-white p-5 shadow-[0_8px_30px_rgba(0,0,0,0.08)] md:p-7">
         <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold lowercase tracking-tight">
