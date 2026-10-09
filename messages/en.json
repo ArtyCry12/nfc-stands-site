@@ -1,0 +1,154 @@
+{
+  "meta": {
+    "siteName": "Touchform.md",
+    "defaultTitle": "Touchform.md — local NFC brand",
+    "defaultDescription": "Physical NFC products and digital scenarios for businesses in Moldova and Romania. AI consultant, configurator, and Telegram handoff."
+  },
+  "nav": {
+    "catalog": "Catalog",
+    "solutions": "Solutions",
+    "consultant": "AI consultant",
+    "concept": "Concept",
+    "about": "About",
+    "contact": "Contact",
+    "cta": "Talk to us",
+    "configure": "Configure"
+  },
+  "home": {
+    "eyebrow": "Local NFC brand · Moldova & Romania",
+    "headline": "one nfc object. one tap. one conversion.",
+    "subhead": "We match the stand, material, and digital scenario — reviews, smart menu, or interactive page — then hand everything to a manager in Telegram.",
+    "ctaPrimary": "Start AI consultant",
+    "ctaSecondary": "Browse catalog",
+    "contextCafe": "café",
+    "contextHotel": "hotel",
+    "contextDesk": "reception",
+    "proof": "physical + digital designed together",
+    "whyTitle": "why touchform",
+    "why1Title": "Not just stands",
+    "why1Body": "We pair the physical product with the customer action you want: review, menu, check-in, lead.",
+    "why2Title": "Consultant, not chatbot",
+    "why2Body": "Short questions, a few concrete ideas, a structured offer — no endless form.",
+    "why3Title": "Telegram handoff",
+    "why3Body": "Configuration, concept, and image reach the manager with context intact.",
+    "catalogTitle": "starter assortment",
+    "catalogNote": "“From” prices are provisional until the founder locks the price list.",
+    "faqTitle": "common questions",
+    "leadTitle": "send the idea to a manager",
+    "leadSub": "We reply in Telegram. No cart, no fake checkout."
+  },
+  "catalog": {
+    "title": "catalog",
+    "subtitle": "Review stands, plaques, stickers, and digital kits. Configure and send via Telegram.",
+    "from": "from",
+    "currency": "MDL",
+    "onRequest": "on request",
+    "view": "Details",
+    "configure": "Configure",
+    "materials": "Materials",
+    "scenarios": "Scenarios",
+    "unknownPrice": "Final price after branding and quantity"
+  },
+  "configure": {
+    "title": "configurator",
+    "color": "Color",
+    "material": "Material",
+    "finish": "Finish",
+    "branding": "Branding",
+    "scenario": "Digital scenario",
+    "estimate": "Estimate",
+    "estimateNote": "Internal estimate — not a firm quote until a manager confirms.",
+    "cta": "Send to Telegram",
+    "summary": "Configuration summary"
+  },
+  "consultant": {
+    "title": "ai consultant",
+    "subtitle": "Describe the business and the action you want from customers. Get a structured concept you can visualize and hand to a manager.",
+    "business": "Business type",
+    "businessPlaceholder": "e.g. café, clinic, hotel, showroom",
+    "goal": "What you want",
+    "goalPlaceholder": "e.g. more Google reviews, paperless menu, leads",
+    "context": "Context / place",
+    "contextPlaceholder": "e.g. table, reception, window",
+    "ask": "Get recommendations",
+    "loading": "Checking catalog and constraints…",
+    "error": "Could not build a concept. Try again.",
+    "mockNotice": "Demo mode: no LLM key — catalog-based consultant is active.",
+    "ideas": "Fitting ideas",
+    "offer": "Personalized offer",
+    "unknowns": "Confirm with manager",
+    "toConcept": "Generate visual",
+    "toTelegram": "Send to manager"
+  },
+  "concept": {
+    "title": "concept studio",
+    "subtitle": "At most two successful generations per session. After the limit, continue in Telegram.",
+    "generate": "Generate concept",
+    "remaining": "Generations left",
+    "limitHit": "Both generations used. Continue with a manager in Telegram — context is kept.",
+    "loading": "Rendering the product…",
+    "fallbackNotice": "No image key — returning a realistic SVG product stub.",
+    "visualNote": "The image does not certify 1:1 manufacturability. Production spec is separate.",
+    "error": "Generation failed.",
+    "needConcept": "Start with the consultant to obtain a valid JSON contract."
+  },
+  "solutions": {
+    "title": "solutions",
+    "subtitle": "Digital scenarios tied to the physical object.",
+    "reviews": {
+      "title": "Google / Maps reviews",
+      "body": "Stand on a table or reception — one tap to the review page."
+    },
+    "menu": {
+      "title": "Smart Menu",
+      "body": "Updatable menu without reprints. Built for hospitality."
+    },
+    "page": {
+      "title": "Interactive page",
+      "body": "Short landing: offers, check-in, lead form, Wi‑Fi, hours."
+    },
+    "custom": {
+      "title": "Custom",
+      "body": "Shape, material, and digital flow designed together."
+    }
+  },
+  "about": {
+    "title": "about touchform",
+    "body": "Touchform.md is the local NFC brand for Moldova and Romania. We build physical objects that open useful digital gestures — not an anonymous tag shop."
+  },
+  "contact": {
+    "title": "contact",
+    "subtitle": "Write to us or open Telegram. We never claim a request was sent if the integration is not configured.",
+    "name": "Name",
+    "phone": "Phone",
+    "message": "Message",
+    "send": "Send to manager",
+    "telegram": "Open Telegram",
+    "success": "Request sent to the manager on Telegram.",
+    "fallback": "Telegram bot not configured. Open the public chat and paste the summary below.",
+    "copySummary": "Telegram summary"
+  },
+  "faq": {
+    "q1": "Do you deliver in Moldova and Romania?",
+    "a1": "Yes — primary markets are Moldova and Romania. Delivery details are confirmed on Telegram.",
+    "q2": "Can I order NFC stickers only?",
+    "a2": "Yes, but we help attach them to a useful digital scenario — not an empty URL.",
+    "q3": "Does the AI invent products?",
+    "a3": "No. The consultant uses the catalog and marks unknowns as “confirm with manager”.",
+    "q4": "Why only two concept generations?",
+    "a4": "To control cost and move quickly into a manager conversation once the idea is clear."
+  },
+  "common": {
+    "loading": "Loading…",
+    "error": "Something went wrong.",
+    "retry": "Try again",
+    "back": "Back",
+    "localeRo": "RO",
+    "localeRu": "RU",
+    "localeEn": "EN"
+  },
+  "footer": {
+    "tagline": "Local NFC brand",
+    "rights": "Touchform.md · Chișinău"
+  }
+}

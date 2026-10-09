@@ -1,0 +1,154 @@
+{
+  "meta": {
+    "siteName": "Touchform.md",
+    "defaultTitle": "Touchform.md — marca NFC locală",
+    "defaultDescription": "Produse NFC fizice și scenarii digitale pentru afaceri din Moldova și România. Consultant AI, configurator și predare în Telegram."
+  },
+  "nav": {
+    "catalog": "Catalog",
+    "solutions": "Soluții",
+    "consultant": "Consultant AI",
+    "concept": "Concept",
+    "about": "Despre",
+    "contact": "Contact",
+    "cta": "Vorbește cu noi",
+    "configure": "Configurează"
+  },
+  "home": {
+    "eyebrow": "Local NFC brand · Moldova & România",
+    "headline": "un obiect NFC. un gest. o conversie.",
+    "subhead": "Alegem standul, materialul și scenariul digital potrivit — recenzii, meniu smart sau pagină interactivă — și predăm totul managerului în Telegram.",
+    "ctaPrimary": "Pornește consultantul AI",
+    "ctaSecondary": "Vezi catalogul",
+    "contextCafe": "cafenea",
+    "contextHotel": "hotel",
+    "contextDesk": "recepție",
+    "proof": "fizic + digital proiectate împreună",
+    "whyTitle": "de ce touchform",
+    "why1Title": "Nu doar standuri",
+    "why1Body": "Potrivim produsul fizic cu acțiunea pe care o vrei de la client: recenzie, meniu, check-in, lead.",
+    "why2Title": "Consultant, nu chatbot",
+    "why2Body": "Întrebări scurte, câteva idei concrete, ofertă structurată — fără anchetă infinită.",
+    "why3Title": "Predare în Telegram",
+    "why3Body": "Configurația, conceptul și imaginea ajung la manager cu context, nu ca un mesaj gol.",
+    "catalogTitle": "asortiment de start",
+    "catalogNote": "Prețurile sunt orientative „de la” până la confirmarea listei fondatorului.",
+    "faqTitle": "întrebări frecvente",
+    "leadTitle": "trimite ideea managerului",
+    "leadSub": "Răspundem în Telegram. Fără coș, fără checkout fals."
+  },
+  "catalog": {
+    "title": "catalog",
+    "subtitle": "Standuri pentru recenzii, plăci, stickere și kituri digitale. Configurează și trimite în Telegram.",
+    "from": "de la",
+    "currency": "MDL",
+    "onRequest": "la cerere",
+    "view": "Detalii",
+    "configure": "Configurează",
+    "materials": "Materiale",
+    "scenarios": "Scenarii",
+    "unknownPrice": "Preț final după branding și tiraj"
+  },
+  "configure": {
+    "title": "configurator",
+    "color": "Culoare",
+    "material": "Material",
+    "finish": "Finisaj",
+    "branding": "Branding",
+    "scenario": "Scenariu digital",
+    "estimate": "Estimare",
+    "estimateNote": "Estimare internă — nu este ofertă fermă până la confirmarea managerului.",
+    "cta": "Trimite în Telegram",
+    "summary": "Rezumat configurație"
+  },
+  "consultant": {
+    "title": "consultant AI",
+    "subtitle": "Descrie afacerea și ce vrei de la client. Primim un concept structurat pe care îl poți genera vizual și trimite managerului.",
+    "business": "Tip de afacere",
+    "businessPlaceholder": "ex. cafenea, clinică, hotel, showroom",
+    "goal": "Ce vrei să obții",
+    "goalPlaceholder": "ex. mai multe recenzii Google, meniu fără hârtie, lead-uri",
+    "context": "Context / loc",
+    "contextPlaceholder": "ex. masă, recepție, vitrină",
+    "ask": "Obține recomandări",
+    "loading": "Analizăm catalogul și constrângerile…",
+    "error": "Nu am putut genera conceptul. Încearcă din nou.",
+    "mockNotice": "Mod demo: lipsește cheia LLM — folosim consultantul pe baza catalogului.",
+    "ideas": "Idei potrivite",
+    "offer": "Ofertă personalizată",
+    "unknowns": "De confirmat cu managerul",
+    "toConcept": "Generează vizualul",
+    "toTelegram": "Trimite managerului"
+  },
+  "concept": {
+    "title": "studio de concept",
+    "subtitle": "Maximum două generări reușite pe sesiune. După limită, predăm proiectul în Telegram.",
+    "generate": "Generează conceptul",
+    "remaining": "Generări rămase",
+    "limitHit": "Ai folosit cele două generări. Continuă cu managerul în Telegram — contextul este păstrat.",
+    "loading": "Generăm vizualul produsului…",
+    "fallbackNotice": "Fără cheie de imagine — returnăm un stub SVG realist al produsului.",
+    "visualNote": "Vizualul nu certifică fabricabilitatea 1:1. Specificația de producție e separată.",
+    "error": "Generarea a eșuat.",
+    "needConcept": "Pornește mai întâi de la consultant pentru un contract JSON valid."
+  },
+  "solutions": {
+    "title": "soluții",
+    "subtitle": "Scenarii digitale legate de obiectul fizic.",
+    "reviews": {
+      "title": "Recenzii Google / Maps",
+      "body": "Stand pe masă sau recepție — un tap, pagina de recenzie."
+    },
+    "menu": {
+      "title": "Smart Menu",
+      "body": "Meniu actualizabil fără retipărire. Ideal pentru HoReCa."
+    },
+    "page": {
+      "title": "Pagină interactivă",
+      "body": "Landing scurt: oferte, check-in, lead form, Wi‑Fi, program."
+    },
+    "custom": {
+      "title": "Custom",
+      "body": "Formă, material și flux digital proiectate împreună."
+    }
+  },
+  "about": {
+    "title": "despre touchform",
+    "body": "Touchform.md este marca NFC locală pentru Moldova și România. Construim obiecte fizice care deschid gesturi digitale utile — nu un magazin anonim de tag-uri."
+  },
+  "contact": {
+    "title": "contact",
+    "subtitle": "Scrie-ne sau deschide Telegram. Nu pretindem că mesajul a plecat dacă integrarea nu e configurată.",
+    "name": "Nume",
+    "phone": "Telefon",
+    "message": "Mesaj",
+    "send": "Trimite către manager",
+    "telegram": "Deschide Telegram",
+    "success": "Cererea a fost trimisă managerului în Telegram.",
+    "fallback": "Bot Telegram neconfigurat. Deschide chatul public și lipește rezumatul de mai jos.",
+    "copySummary": "Rezumat pentru Telegram"
+  },
+  "faq": {
+    "q1": "Livrați în Moldova și România?",
+    "a1": "Da — piețele principale sunt Moldova și România. Detaliile de livrare se confirmă pe Telegram.",
+    "q2": "Pot comanda doar stickere NFC?",
+    "a2": "Da, dar te ajutăm să legi stickerele de un scenariu digital util, nu doar de un URL gol.",
+    "q3": "AI-ul inventează produse?",
+    "a3": "Nu. Consultantul folosește catalogul și marchează necunoscutele ca „de confirmat”.",
+    "q4": "De ce doar două generări de concept?",
+    "a4": "Pentru a controla costul și a trece rapid la discuția cu managerul după ce ideea e clară."
+  },
+  "common": {
+    "loading": "Se încarcă…",
+    "error": "Ceva nu a mers.",
+    "retry": "Încearcă din nou",
+    "back": "Înapoi",
+    "localeRo": "RO",
+    "localeRu": "RU",
+    "localeEn": "EN"
+  },
+  "footer": {
+    "tagline": "Local NFC brand",
+    "rights": "Touchform.md · Chișinău"
+  }
+}
