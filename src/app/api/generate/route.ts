@@ -1,6 +1,15 @@
 import { NextResponse } from "next/server";
 import { ConceptContractSchema } from "@/lib/concept-schema";
+import {
+  getDailyImageCount,
+  persistSessionQuota,
+  saveConcept,
+} from "@/lib/concept-store";
 import { buildProductSvg, imageConfigured } from "@/lib/generate-visual";
+import {
+  checkBurstLimit,
+  dailyImageLimit,
+} from "@/lib/rate-limit";
 import {
   readSession,
   withSessionLock,
@@ -22,6 +31,8 @@ export async function GET() {
     generations: session.generations,
     remaining: Math.max(0, max - session.generations),
     max,
+    dailyImages: await getDailyImageCount(),
+    dailyLimit: dailyImageLimit(),
   });
 }
 
@@ -34,6 +45,30 @@ export async function POST(request: Request) {
         handoff: true,
       },
       { status: 503 },
+    );
+  }
+
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    request.headers.get("x-real-ip") ||
+    "local";
+  const burst = checkBurstLimit(`gen:${ip}`, 6, 60_000);
+  if (!burst.ok) {
+    return NextResponse.json(
+      { error: "IP burst limit", code: "BURST", retryAfterMs: burst.retryAfterMs },
+      { status: 429 },
+    );
+  }
+
+  const daily = await getDailyImageCount();
+  if (daily >= dailyImageLimit()) {
+    return NextResponse.json(
+      {
+        error: "Daily image hard cap reached",
+        code: "DAILY_CAP",
+        handoff: true,
+      },
+      { status: 429 },
     );
   }
 
@@ -81,6 +116,12 @@ export async function POST(request: Request) {
 
     current.generations += 1;
     await writeSession(current);
+    await persistSessionQuota({
+      sessionId: current.sid,
+      generations: current.generations,
+      chatTurns: current.chatTurns,
+      incrementDailyImage: true,
+    });
 
     const updatedConcept = {
       ...conceptParsed.data,
@@ -94,6 +135,13 @@ export async function POST(request: Request) {
       },
     };
 
+    await saveConcept({
+      sessionId: current.sid,
+      concept: updatedConcept,
+      previewDataUrl: visual.dataUrl,
+      status: "draft",
+    });
+
     return NextResponse.json({
       ok: true,
       imageDataUrl: visual.dataUrl,
@@ -103,6 +151,7 @@ export async function POST(request: Request) {
       remaining: Math.max(0, max - current.generations),
       max,
       concept: updatedConcept,
+      stored: true,
       note: "Concept preview — final materials, dimensions, quote and production design confirmed by our team.",
     });
   });

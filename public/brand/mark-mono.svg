@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none" role="img" aria-labelledby="title">
+  <title id="title">Touchform.md monochrome</title>
+  <rect x="18" y="28" width="40" height="72" rx="6" fill="#111111"/>
+  <path d="M58 40 H86 C98 40 106 52 106 64 C106 76 98 88 86 88 H58" stroke="#111111" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <circle cx="96" cy="64" r="7" fill="#111111"/>
+  <rect x="28" y="48" width="18" height="4" rx="2" fill="#FFFFFF"/>
+  <rect x="28" y="58" width="12" height="4" rx="2" fill="#FFFFFF" opacity="0.7"/>
+</svg>

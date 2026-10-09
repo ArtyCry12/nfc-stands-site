@@ -104,7 +104,8 @@
     "visualNote": "Concept preview — final materials, dimensions, quote and production design confirmed by our team.",
     "error": "Generation failed.",
     "needConcept": "Start with the consultant to obtain a valid JSON contract.",
-    "consent": "By sending, you agree to share the image and brief with the team via Telegram."
+    "consent": "By sending, you agree to share the image and brief with the team via Telegram.",
+    "destination": "Destination URL (QR)"
   },
   "solutions": {
     "title": "solutions",

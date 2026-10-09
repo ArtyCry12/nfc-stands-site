@@ -167,7 +167,7 @@ export function buildMockConcept(input: ConsultRequest): ConceptContract {
       text: null,
       logo_asset_id: null,
       qr_enabled: true,
-      qr_destination_url: null,
+      qr_destination_url: input.destinationUrl ?? null,
       quantity: qty,
       reference_image_ids: [],
       image_prompt_constraints: [

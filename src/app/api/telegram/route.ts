@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { updateConceptStatus } from "@/lib/concept-store";
 import {
   formatConceptSummary,
   handoffToTelegram,
@@ -56,6 +57,12 @@ export async function POST(request: Request) {
       ? String((parsed.data.concept as { lead_id?: string }).lead_id || "")
       : "";
 
+  if (leadId) {
+    await updateConceptStatus(leadId, "sending", {
+      previewDataUrl: parsed.data.imageDataUrl || undefined,
+    });
+  }
+
   const result = await handoffToTelegram({
     text,
     imageDataUrl: parsed.data.imageDataUrl,
@@ -64,11 +71,20 @@ export async function POST(request: Request) {
   });
 
   if (result.ok) {
+    if (leadId) {
+      await updateConceptStatus(leadId, "sent", {
+        telegramMessageId: result.messageId,
+      });
+    }
     return NextResponse.json({
       ok: true,
       mode: result.mode,
       messageId: result.messageId,
     });
+  }
+
+  if (leadId) {
+    await updateConceptStatus(leadId, "failed");
   }
 
   return NextResponse.json(

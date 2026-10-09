@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start -p 4317 -H 127.0.0.1",
     "lint": "eslint",
-    "test": "tsx --test src/lib/pricing.test.ts"
+    "test": "tsx src/lib/pricing.test.ts && tsx src/lib/qr.test.ts && tsx scripts/consultant-eval.ts",
+    "test:eval": "tsx scripts/consultant-eval.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^4.0.91",
@@ -16,9 +17,12 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "jose": "^6.2.12",
+    "jsqr": "^1.4.0",
     "lucide-react": "^1.54.0",
     "next": "^15.5.27",
     "next-intl": "^4.14.9",
+    "pngjs": "^7.0.0",
+    "qrcode": "^1.5.4",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "shadcn": "^4.21.4",
@@ -30,6 +34,8 @@
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20.19.43",
+    "@types/pngjs": "^6.0.5",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">Touchform bridge mark</title>
+  <desc id="desc">Two forms connecting into one system</desc>
+  <!-- Direction 2: Connection / bridge -->
+  <circle cx="40" cy="64" r="26" fill="#111111"/>
+  <circle cx="88" cy="64" r="26" stroke="#FF7A45" stroke-width="8" fill="none"/>
+  <path d="M52 64 H76" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="64" cy="64" r="5" fill="#FF7A45"/>
+</svg>

@@ -5,7 +5,10 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { ConceptContract } from "@/lib/concept-schema";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { LeadForm } from "@/components/lead-form";
+import { QrPreview } from "@/components/qr-preview";
 
 const STORAGE_KEY = "tf_concept_v1";
 
@@ -18,11 +21,18 @@ export function ConceptStudio() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [limitHit, setLimitHit] = useState(false);
+  const [destUrl, setDestUrl] = useState("");
 
   useEffect(() => {
     try {
       const raw = sessionStorage.getItem(STORAGE_KEY);
-      if (raw) setConcept(JSON.parse(raw) as ConceptContract);
+      if (raw) {
+        const parsed = JSON.parse(raw) as ConceptContract;
+        setConcept(parsed);
+        if (parsed.design?.qr_destination_url) {
+          setDestUrl(parsed.design.qr_destination_url);
+        }
+      }
     } catch {
       /* ignore */
     }
@@ -97,6 +107,36 @@ export function ConceptStudio() {
           <Link href="/consultant" className="text-sm underline">
             {t("needConcept")}
           </Link>
+        )}
+        {concept && (
+          <div className="space-y-2">
+            <Label htmlFor="concept-url">{t("destination")}</Label>
+            <Input
+              id="concept-url"
+              type="url"
+              placeholder="https://"
+              value={destUrl}
+              onChange={(e) => {
+                const next = e.target.value;
+                setDestUrl(next);
+                setConcept((prev) => {
+                  if (!prev) return prev;
+                  const updated = {
+                    ...prev,
+                    design: {
+                      ...prev.design,
+                      qr_enabled: true,
+                      qr_destination_url: next.trim() || null,
+                    },
+                  };
+                  sessionStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+                  return updated;
+                });
+              }}
+              className="h-12 rounded-full"
+            />
+            <QrPreview url={destUrl} label="QR" />
+          </div>
         )}
         <Button
           type="button"

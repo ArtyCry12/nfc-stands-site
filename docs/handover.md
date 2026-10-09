@@ -1,64 +1,78 @@
 # Touchform.md — Handover / runbook
 
+Updated after acceptance batch (QR, multi-turn eval, concept store, logos) — 2026-10-09.
+
 ## Run
 
 ```bash
 cp .env.example .env.local
 npm install
 npm run dev   # http://127.0.0.1:4317
+npm test      # pricing + QR decode + consultant eval (5 dialogs)
 ```
 
 Branch: `cursor/touchform-site-ef45`  
-Agent: https://cursor.com/agents/bc-e56d29f7-e163-50ca-bfaa-a3ff9b78ef45
+Agent: https://cursor.com/agents/bc-e56d29f7-e163-50ca-bfaa-a3ff9b78ef45  
+Package SoT: `/cursor/stores/self/docs/package/` (also in `docs/package/`)  
+Acceptance: `/cursor/stores/self/internal/acceptance-checklist.md`
+
+## Standard pricing (founder)
+
+| Qty | MDL / unit |
+|---:|---:|
+| 1–2 | 450 |
+| 3–6 | 400 |
+| 7–10 | 350 |
+| 11–19 | 300 |
+| 20+ | 250 |
+
+Only `standard-review-stand`. Everything else = individual quote.
 
 ## Env
 
-| Variable | Required for | Without it |
-|----------|--------------|------------|
-| `SESSION_SECRET` | Stable generation limits across restarts | Dev fallback secret (change before prod) |
-| `OPENAI_API_KEY` (+ optional `OPENAI_BASE_URL`, `OPENAI_MODEL`) | Live LLM consultant | Catalog mock consultant (`mode: mock`) |
-| `IMAGE_API_KEY` | Real image provider | SVG product stub (still counts toward limit) |
-| `TELEGRAM_BOT_TOKEN` + `TELEGRAM_MANAGER_CHAT_ID` | Real manager handoff + photo | Honest 503 fallback + public URL + paste summary |
-| `NEXT_PUBLIC_TELEGRAM_URL` | Visitor deep-link | Defaults to `https://t.me/touchform_md` |
-| `NEXT_PUBLIC_SITE_URL` | Canonical / sitemap | `http://127.0.0.1:4317` |
+See `.env.example`. Critical:
 
-## Limits
+| Variable | Purpose |
+|----------|---------|
+| `SESSION_SECRET` | Signed generation session |
+| `AI_MAX_IMAGES_PER_SESSION=2` | Image cap |
+| `AI_DAILY_IMAGE_LIMIT` | Process-wide daily image counter (file store) |
+| `AI_CHAT_REQUESTS_PER_MINUTE` | IP burst for consult |
+| `AI_GENERATION_KILL_SWITCH` | Disable images, keep site |
+| `AI_CONCEPT_TTL_HOURS` | Concept file TTL (default 72) |
+| `OPENAI_*` / `GOOGLE_GEMINI_API_KEY` / `AI_TEXT_*` | Live consultant |
+| `AI_IMAGE_*` / Gemini image keys | Live concept images |
+| `TELEGRAM_BOT_TOKEN` + `TELEGRAM_MANAGER_CHAT_ID` | Real `sendPhoto` |
+| `TELEGRAM_CUSTOMER_CHAT_LINK` | Post-handoff human link |
 
-- Max **2 successful** `POST /api/generate` per signed `tf_session` cookie
-- Verified: 1→200 remaining 1, 2→200 remaining 0, 3→**429** `LIMIT`
+## What’s done (no paid keys)
 
-## What’s tested (no keys)
+- Code-generated scannable QR (`/api/qr`, configurator + concept studio, jsQR unit decode)
+- Multi-turn consultant UI (`/api/consult/turn` + `ConsultantPanel` history) + eval suite 5/5
+- Persistent concept store under `.data/concepts/` + `/api/concepts/[id]`
+- IP burst + daily image cap + session cookie max-2 + kill switch
+- Three logo SVGs; **Threshold** in chrome (`mark.svg` / favicon); ADR documented
+- Build + `npm test` green; routes: products aliases, cases, configure
 
-- `npm run build` — pass
-- Locale redirect `/` → `/ro` + cookie
-- Home / catalog / consultant / concept / configure routes render
-- Consult mock returns valid ConceptContract JSON
-- Generation SVG stub + session limit
-- Telegram fallback does **not** claim success
+## Needs founder (§13 gates)
 
-## Needs keys / founder
+- Telegram bot token + manager chat ID (live image send)
+- Paid LLM/image spend / budget ceiling
+- Final logo / production identity (Threshold is interim chrome pick)
+- Production deploy / DNS
+- Name/domain/trademark pre-launch check evidence
+- Verify Délice d’Ange / Padel Point live destinations before detailed claims
+- Aikido MCP sign-in to complete security scan
 
-- LLM quality beyond mock
-- Real concept images (paid provider — founder gate)
-- Telegram Bot API delivery with attachments
-- Lock SKU prices (package docs were missing in VM)
-- Production publish
-- Aikido MCP sign-in (scan blocked until founder authenticates)
+## Still open (non-blocking for this slice)
 
-## Aikido
-
-Scan not completed — MCP requires user sign-in:
-
-- [EU](https://app.aikido.dev/settings/integrations/ide/mcp?source=mcp&redirect_uri=http%3A%2F%2F127.0.0.1%3A35861%2Fcallback&state=YhRJ1eYoOi88mYRIHdv8xi2HRm5--vbdQ5qwHapkjy0)
-- [US](https://app.us.aikido.dev/settings/integrations/ide/mcp?source=mcp&redirect_uri=http%3A%2F%2F127.0.0.1%3A35861%2Fcallback&state=YhRJ1eYoOi88mYRIHdv8xi2HRm5--vbdQ5qwHapkjy0)
-- [ME](https://app.me.aikido.dev/settings/integrations/ide/mcp?source=mcp&redirect_uri=http%3A%2F%2F127.0.0.1%3A35861%2Fcallback&state=YhRJ1eYoOi88mYRIHdv8xi2HRm5--vbdQ5qwHapkjy0)
-
-After sign-in, re-run `aikido_full_scan` on `src/app/api/*`, `src/lib/*`, key components.
+- Live Telegram `sendPhoto` evidence
+- Paid LLM / image path
+- Layered product photo renderer (QR is real; stand art still CSS/stub)
+- Supabase swap for `.data/` when approved
+- Preview deploy (Origin `agent_temp` blocks PR forge)
+- LLM-judge language-quality evals
 
 ## PR
 
-Draft PR could not be created: Origin repo kind is `agent_temp` (temp new-project repo). Branch is pushed: `cursor/touchform-site-ef45`. Create a standard repo / PR after the Create repo step if needed.
-
-## Design
-
-Object Stage — see `docs/architecture-decisions.md`.
+Draft PR blocked on Origin `agent_temp` repo kind. Branch pushed.

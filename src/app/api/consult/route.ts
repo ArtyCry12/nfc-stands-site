@@ -4,16 +4,40 @@ import {
   ConceptContractSchema,
   ConsultRequestSchema,
 } from "@/lib/concept-schema";
+import { persistSessionQuota, saveConcept } from "@/lib/concept-store";
 import {
   buildMockConcept,
   consultSystemContext,
   llmConfigured,
 } from "@/lib/consult";
 import { priceStandardReviewStand } from "@/lib/pricing";
+import {
+  chatRequestsPerMinute,
+  checkBurstLimit,
+  maxChatTurns,
+} from "@/lib/rate-limit";
+import { readSession, writeSession } from "@/lib/session";
 
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    request.headers.get("x-real-ip") ||
+    "local";
+
+  const burst = checkBurstLimit(
+    `consult:${ip}`,
+    chatRequestsPerMinute(),
+    60_000,
+  );
+  if (!burst.ok) {
+    return NextResponse.json(
+      { error: "Chat rate limit", code: "BURST", retryAfterMs: burst.retryAfterMs },
+      { status: 429 },
+    );
+  }
+
   let body: unknown;
   try {
     body = await request.json();
@@ -26,6 +50,18 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "Validation failed", details: parsed.error.flatten() },
       { status: 400 },
+    );
+  }
+
+  const session = await readSession();
+  if (session.chatTurns >= maxChatTurns()) {
+    return NextResponse.json(
+      {
+        error: "Session chat turn limit reached",
+        code: "CHAT_TURNS",
+        max: maxChatTurns(),
+      },
+      { status: 429 },
     );
   }
 
@@ -71,7 +107,6 @@ export async function POST(request: Request) {
         const candidate = JSON.parse(text.slice(jsonStart, jsonEnd + 1));
         const validated = ConceptContractSchema.safeParse(candidate);
         if (validated.success) {
-          // Re-derive standard pricing from rules — never trust model prices.
           if (
             validated.data.recommendation.physical_product_type ===
               "standard-review-stand" &&
@@ -111,9 +146,25 @@ export async function POST(request: Request) {
   }
 
   const validated = ConceptContractSchema.parse(concept);
+  session.chatTurns += 1;
+  await writeSession(session);
+  await persistSessionQuota({
+    sessionId: session.sid,
+    generations: session.generations,
+    chatTurns: session.chatTurns,
+  });
+  await saveConcept({
+    sessionId: session.sid,
+    concept: validated,
+    status: "draft",
+  });
+
   return NextResponse.json({
     concept: validated,
     mode,
     llmConfigured: useLlm,
+    chatTurns: session.chatTurns,
+    chatTurnsMax: maxChatTurns(),
+    stored: true,
   });
 }

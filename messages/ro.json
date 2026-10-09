@@ -104,7 +104,8 @@
     "visualNote": "Previzualizare concept — materialele, dimensiunile, oferta și designul de producție sunt confirmate de echipă.",
     "error": "Generarea a eșuat.",
     "needConcept": "Pornește mai întâi de la consultant pentru un contract JSON valid.",
-    "consent": "Trimițând, accepți partajarea imaginii și a brief-ului cu echipa via Telegram."
+    "consent": "Trimițând, accepți partajarea imaginii și a brief-ului cu echipa via Telegram.",
+    "destination": "URL destinație (QR)"
   },
   "solutions": {
     "title": "soluții",

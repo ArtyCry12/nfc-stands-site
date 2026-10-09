@@ -78,6 +78,7 @@ export const ConsultRequestSchema = z.object({
   goal: z.string().min(2).max(500),
   context: z.string().max(300).optional(),
   quantity: z.number().int().positive().max(10_000).optional(),
+  destinationUrl: z.string().url().optional(),
 });
 
 export type ConsultRequest = z.infer<typeof ConsultRequestSchema>;

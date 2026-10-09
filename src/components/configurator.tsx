@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import { LeadForm } from "@/components/lead-form";
 import { ProductVisual } from "@/components/product-visual";
+import { QrPreview } from "@/components/qr-preview";
 
 export function Configurator({ product }: { product: CatalogProduct }) {
   const t = useTranslations("configure");
@@ -137,6 +138,7 @@ export function Configurator({ product }: { product: CatalogProduct }) {
             className="h-12 rounded-full"
           />
           <p className="text-xs text-[var(--tf-meta)]">{t("qrNote")}</p>
+          <QrPreview url={destination} label="QR" />
         </div>
 
         {isStandard && (

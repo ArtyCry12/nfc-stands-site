@@ -68,3 +68,27 @@ Cucurigo, Délice d’Ange, Padel Point — honest summaries; partial verificati
 | Old concept schema v1 fields | Founder `schema_version 1.0` |
 | Partial env vars | Founder `env.example` merged |
 | No cases | Cucurigo / Délice / Padel Point pages |
+
+## Logo directions (editable SVG)
+
+Three strategic alternatives under `public/brand/`:
+
+| File | Direction | Idea |
+|------|-----------|------|
+| `logo-threshold.svg` | Threshold / portal | Physical block opening into a digital signal |
+| `logo-bridge.svg` | Connection / bridge | Two forms linked into one system |
+| `logo-type.svg` | Typographic signature | touch + altered “f” tap stem + orm.md |
+
+**Selected for site chrome:** **Threshold / portal** → shipped as `public/brand/mark.svg`, `mark-mono.svg`, and `favicon.svg`. Rationale: reads at favicon size, works monochrome/engraving, visually distinct from generic NFC waves, and matches “physical → digital” positioning. Final production identity still needs founder approval (§13).
+
+## QR
+
+Destinations validated server-side (`src/lib/qr.ts`). PNG/SVG via `/api/qr`. Configurator + concept studio show live previews. Unit test decodes PNG with jsQR to prove scannability. AI image stubs never draw functional QR.
+
+## Persistence & limits
+
+File-backed store under `.data/` (gitignored): concepts by `lead_id`, session quotas, daily image counter. Burst limits per IP for consult/generate/QR. Cookie session still enforces max 2 images + chat turns; persistence survives reload within TTL (`AI_CONCEPT_TTL_HOURS`, default 72).
+
+## Consultant eval
+
+`scripts/consultant-eval.ts` — multi-turn scripted dialogs asserting schema, pricing rules, custom-quote abstinence, and no invented dimensions.

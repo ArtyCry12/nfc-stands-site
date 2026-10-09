@@ -22,7 +22,18 @@ export function SiteHeader() {
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50 px-3 pt-3 md:px-6">
       <div className="pointer-events-auto mx-auto flex max-w-6xl items-center justify-between gap-3 rounded-full bg-[var(--tf-ink)] px-4 py-2.5 text-white shadow-[0_8px_30px_rgba(0,0,0,0.25)]">
-        <Link href="/" className="font-[family-name:var(--font-display)] text-base font-bold tracking-tight lowercase">
+        <Link
+          href="/"
+          className="flex items-center gap-2 font-[family-name:var(--font-display)] text-base font-bold tracking-tight lowercase"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/mark.svg"
+            alt=""
+            width={22}
+            height={22}
+            className="rounded-sm bg-white/95"
+          />
           touchform<span className="text-[var(--tf-accent)]">.md</span>
         </Link>
         <nav className="hidden items-center gap-4 text-sm text-white/70 md:flex">

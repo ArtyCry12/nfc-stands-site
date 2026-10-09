@@ -24,6 +24,9 @@ export const metadata: Metadata = {
   },
   description:
     "Physical NFC products and digital scenarios for Moldova and Romania.",
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+  },
 };
 
 export default function RootLayout({
