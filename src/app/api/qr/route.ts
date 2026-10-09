@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import {
   generateQrPngBuffer,
+  generateQrPngDataUrl,
   generateQrSvg,
   validateDestinationUrl,
 } from "@/lib/qr";
@@ -86,9 +87,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: check.error, ok: false }, { status: 400 });
   }
 
-  const { dataUrl, url: normalized } = await (
-    await import("@/lib/qr")
-  ).generateQrPngDataUrl(check.normalized, 256);
+  const { dataUrl, url: normalized } = await generateQrPngDataUrl(
+    check.normalized,
+    256,
+  );
 
   return NextResponse.json({
     ok: true,
