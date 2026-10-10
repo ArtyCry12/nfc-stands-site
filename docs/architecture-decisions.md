@@ -100,3 +100,8 @@ File-backed store under `.data/` (gitignored): concepts by `lead_id`, session qu
 ## Consultant eval
 
 `scripts/consultant-eval.ts` — multi-turn scripted dialogs asserting schema, pricing rules, custom-quote abstinence, and no invented dimensions.
+
+
+## Product Studio redesign (2026-10-10)
+
+Full composition pass against founder moodboard `google-product-studio-moodboard.png`. Design tokens, section map, and ref→placement table live in `docs/design-system.md`. Manrope + primary blue CTAs + numbered home story (01–10) with all six approved videos. Does not change pricing, layered-v1, generation limits, or Telegram fallbacks.

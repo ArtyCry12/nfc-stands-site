@@ -21,32 +21,26 @@ export function SiteHeader() {
   ] as const;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-white/90 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-[var(--ps-line)] bg-white/95 backdrop-blur-md">
       <GoogleStripe />
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 md:px-6">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 md:px-6">
         <Link
           href="/"
-          className="flex items-center gap-2 font-[family-name:var(--font-display)] text-base font-bold tracking-tight"
+          className="flex items-center gap-2 text-[17px] font-extrabold tracking-tight text-[var(--ps-ink)]"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/brand/mark.svg"
-            alt=""
-            width={22}
-            height={22}
-            className="rounded-sm"
-          />
-          touchform<span className="text-[var(--tf-accent)]">.md</span>
+          <img src="/brand/mark.svg" alt="" width={22} height={22} />
+          Touchform<span className="text-[var(--ps-primary)]">.md</span>
         </Link>
-        <nav className="hidden items-center gap-5 text-sm text-[var(--tf-body)] md:flex">
+        <nav className="hidden items-center gap-6 text-[15px] text-[var(--ps-body)] md:flex">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={cn(
-                "transition hover:text-[var(--tf-ink)]",
+                "transition hover:text-[var(--ps-ink)]",
                 pathname.startsWith(link.href) &&
-                  "font-medium text-[var(--tf-ink)]",
+                  "font-semibold text-[var(--ps-ink)]",
               )}
             >
               {link.label}
@@ -54,17 +48,17 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-0.5 rounded-full bg-[var(--tf-stage-soft)] px-1.5 py-1 text-xs">
+          <div className="flex items-center gap-0.5 rounded-full bg-[var(--ps-surface)] p-1 text-xs font-semibold">
             {locales.map((l) => (
               <Link
                 key={l}
                 href={pathname || "/"}
                 locale={l}
                 className={cn(
-                  "rounded-full px-2 py-0.5 uppercase",
+                  "rounded-full px-2.5 py-1 uppercase",
                   l === locale
-                    ? "bg-[var(--tf-ink)] text-white"
-                    : "text-[var(--tf-body)] hover:text-[var(--tf-ink)]",
+                    ? "bg-[var(--ps-ink)] text-white"
+                    : "text-[var(--ps-body)] hover:text-[var(--ps-ink)]",
                 )}
               >
                 {l === "ro"
@@ -77,7 +71,7 @@ export function SiteHeader() {
           </div>
           <Link
             href="/contact"
-            className="hidden h-10 items-center rounded-full bg-[var(--tf-ink)] px-4 text-sm font-semibold text-white transition hover:bg-black sm:inline-flex"
+            className="hidden h-10 items-center rounded-full bg-[var(--ps-primary)] px-4 text-sm font-semibold text-white transition hover:bg-[#1557b0] sm:inline-flex"
           >
             {t("cta")}
           </Link>

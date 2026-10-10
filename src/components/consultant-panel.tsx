@@ -74,19 +74,19 @@ export function ConsultantPanel({ locale }: { locale: "ro" | "ru" | "en" }) {
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
-      <div className="space-y-4 rounded-[1.75rem] bg-white p-5 shadow-[0_8px_30px_rgba(0,0,0,0.08)] md:p-7">
-        <div className="max-h-80 space-y-3 overflow-y-auto rounded-2xl bg-[var(--background)] p-3">
+    <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+      <div className="space-y-4 rounded-[var(--ps-radius-lg)] border border-[var(--ps-line)] bg-white p-5 md:p-7">
+        <div className="max-h-96 space-y-3 overflow-y-auto rounded-[var(--ps-radius)] bg-[var(--ps-surface)] p-4">
           {history.length === 0 && (
-            <p className="text-sm text-[var(--tf-body)]">{t("subtitle")}</p>
+            <p className="text-sm text-[var(--ps-body)]">{t("subtitle")}</p>
           )}
           {history.map((turn, i) => (
             <div
               key={`${turn.role}-${i}`}
-              className={`rounded-2xl px-3 py-2 text-sm ${
+              className={`rounded-[var(--ps-radius)] px-3.5 py-2.5 text-sm leading-6 ${
                 turn.role === "user"
-                  ? "ml-8 bg-[var(--tf-ink)] text-white"
-                  : "mr-8 bg-white text-[var(--tf-ink)] shadow-sm"
+                  ? "ml-8 bg-[var(--ps-primary)] text-white"
+                  : "mr-8 border border-[var(--ps-line)] bg-white text-[var(--ps-ink)]"
               }`}
             >
               {turn.content}
@@ -125,7 +125,7 @@ export function ConsultantPanel({ locale }: { locale: "ro" | "ru" | "en" }) {
           <Button
             type="submit"
             disabled={loading}
-            className="h-12 w-full rounded-full bg-[var(--tf-ink)] text-white"
+            className="h-12 w-full rounded-full bg-[var(--ps-primary)] text-white hover:bg-[#1557b0]"
           >
             {loading ? t("loading") : t("ask")}
           </Button>
@@ -138,7 +138,7 @@ export function ConsultantPanel({ locale }: { locale: "ro" | "ru" | "en" }) {
         </form>
       </div>
 
-      <div className="space-y-4 rounded-[1.75rem] bg-white p-5 shadow-[0_8px_30px_rgba(0,0,0,0.08)] md:p-7">
+      <div className="space-y-4 rounded-[var(--ps-radius-lg)] border border-[var(--ps-line)] bg-white p-5 md:p-7">
         {ideas.length > 0 && (
           <div>
             <p className="text-xs uppercase tracking-[0.18em] text-[var(--tf-meta)]">

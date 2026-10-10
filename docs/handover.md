@@ -1,6 +1,6 @@
 # Touchform.md — Handover / runbook
 
-Updated after white-foundation redesign + approved videos — 2026-10-10.
+Updated after Google-inspired Product Studio redesign — 2026-10-10.
 
 ## Run
 
@@ -15,7 +15,9 @@ Branch: `cursor/redesign-videos-ef45` (off `cursor/touchform-site-ef45`)
 Agent: https://cursor.com/agents/bc-e56d29f7-e163-50ca-bfaa-a3ff9b78ef45  
 Package SoT: `/cursor/stores/self/docs/package/` (also in `docs/package/`)  
 Acceptance: `/cursor/stores/self/internal/acceptance-checklist.md`  
-Redesign report: `/cursor/stores/self/internal/redesign-media-report.md`
+Design system: `/cursor/stores/self/docs/design-system.md`  
+Studio report: `/cursor/stores/self/internal/product-studio-redesign-report.md`  
+Prior media report: `/cursor/stores/self/internal/redesign-media-report.md`
 
 ## Standard pricing (founder)
 

@@ -1,17 +1,12 @@
 import type { Metadata } from "next";
-import { DM_Sans, Space_Grotesk } from "next/font/google";
+import type { CSSProperties } from "react";
+import { Manrope } from "next/font/google";
 import "./globals.css";
 
-const display = Space_Grotesk({
-  variable: "--font-display",
-  subsets: ["latin", "latin-ext"],
-  weight: ["500", "600", "700"],
-});
-
-const body = DM_Sans({
+const manrope = Manrope({
   variable: "--font-body",
   subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "700"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -29,6 +24,10 @@ export const metadata: Metadata = {
   },
 };
 
+const bodyStyle = {
+  ["--font-display"]: "var(--font-body)",
+} as CSSProperties;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -36,7 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ro" suppressHydrationWarning>
-      <body className={`${display.variable} ${body.variable} antialiased`}>
+      <body className={`${manrope.variable} antialiased`} style={bodyStyle}>
         {children}
       </body>
     </html>

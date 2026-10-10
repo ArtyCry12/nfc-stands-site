@@ -39,65 +39,84 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-sm: calc(var(--radius) * 0.75);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) * 1.25);
+  --radius-xl: calc(var(--radius) * 1.5);
+  --radius-2xl: calc(var(--radius) * 1.75);
+  --radius-3xl: calc(var(--radius) * 2);
+  --radius-4xl: calc(var(--radius) * 2.25);
 }
 
+/* Product Studio tokens — see docs/design-system.md */
 :root {
-  /* White foundation — Google-inspired accents, no affiliation claim */
-  --tf-ink: #202124;
-  --tf-accent: #1a73e8;
-  --tf-accent-soft: #e8f0fe;
-  --tf-sheet: #ffffff;
-  --tf-body: #5f6368;
-  --tf-meta: #80868b;
-  --tf-photo: #f1f3f4;
-  --tf-error: #d93025;
-  --tf-stage: #ffffff;
-  --tf-stage-soft: #f8f9fa;
-  --tf-g-blue: #4285f4;
-  --tf-g-red: #ea4335;
-  --tf-g-yellow: #fbbc04;
-  --tf-g-green: #34a853;
-  --tf-mark: #ff7a45; /* Threshold logo coral — kept for mark only */
+  --ps-bg: #ffffff;
+  --ps-surface: #f8f9fa;
+  --ps-ink: #202124;
+  --ps-body: #5f6368;
+  --ps-meta: #80868b;
+  --ps-line: #e8eaed;
+  --ps-primary: #1a73e8;
+  --ps-primary-soft: #e8f0fe;
+  --ps-green: #34a853;
+  --ps-yellow: #fbbc04;
+  --ps-red: #ea4335;
+  --ps-orange: #f9ab00;
+  --ps-error: #d93025;
+  --ps-radius-sm: 12px;
+  --ps-radius: 16px;
+  --ps-radius-lg: 24px;
+  --ps-radius-pill: 999px;
 
-  --background: #ffffff;
-  --foreground: #202124;
+  /* Bridge legacy --tf-* used across components */
+  --tf-ink: var(--ps-ink);
+  --tf-accent: var(--ps-primary);
+  --tf-accent-soft: var(--ps-primary-soft);
+  --tf-sheet: var(--ps-bg);
+  --tf-body: var(--ps-body);
+  --tf-meta: var(--ps-meta);
+  --tf-photo: #f1f3f4;
+  --tf-error: var(--ps-error);
+  --tf-stage: var(--ps-bg);
+  --tf-stage-soft: var(--ps-surface);
+  --tf-g-blue: #4285f4;
+  --tf-g-red: var(--ps-red);
+  --tf-g-yellow: var(--ps-yellow);
+  --tf-g-green: var(--ps-green);
+  --tf-mark: #ff7a45;
+
+  --background: var(--ps-bg);
+  --foreground: var(--ps-ink);
   --card: #ffffff;
-  --card-foreground: #202124;
+  --card-foreground: var(--ps-ink);
   --popover: #ffffff;
-  --popover-foreground: #202124;
-  --primary: #202124;
+  --popover-foreground: var(--ps-ink);
+  --primary: var(--ps-primary);
   --primary-foreground: #ffffff;
-  --secondary: #f8f9fa;
-  --secondary-foreground: #202124;
-  --muted: #f1f3f4;
-  --muted-foreground: #5f6368;
-  --accent: #e8f0fe;
+  --secondary: var(--ps-surface);
+  --secondary-foreground: var(--ps-ink);
+  --muted: var(--ps-surface);
+  --muted-foreground: var(--ps-body);
+  --accent: var(--ps-primary-soft);
   --accent-foreground: #174ea6;
-  --destructive: #d93025;
-  --border: #e8eaed;
-  --input: #e8eaed;
-  --ring: #1a73e8;
-  --chart-1: #1a73e8;
-  --chart-2: #34a853;
-  --chart-3: #fbbc04;
-  --chart-4: #ea4335;
-  --chart-5: #5f6368;
-  --radius: 0.75rem;
+  --destructive: var(--ps-error);
+  --border: var(--ps-line);
+  --input: var(--ps-line);
+  --ring: var(--ps-primary);
+  --chart-1: var(--ps-primary);
+  --chart-2: var(--ps-green);
+  --chart-3: var(--ps-yellow);
+  --chart-4: var(--ps-red);
+  --chart-5: var(--ps-body);
+  --radius: 16px;
   --sidebar: #ffffff;
-  --sidebar-foreground: #202124;
-  --sidebar-primary: #1a73e8;
+  --sidebar-foreground: var(--ps-ink);
+  --sidebar-primary: var(--ps-primary);
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #e8f0fe;
+  --sidebar-accent: var(--ps-primary-soft);
   --sidebar-accent-foreground: #174ea6;
-  --sidebar-border: #e8eaed;
-  --sidebar-ring: #1a73e8;
+  --sidebar-border: var(--ps-line);
+  --sidebar-ring: var(--ps-primary);
 }
 
 @layer base {
@@ -107,16 +126,24 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-body), system-ui, sans-serif;
+    font-size: 18px;
+    line-height: 28px;
   }
   html {
     @apply font-sans;
   }
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-display), var(--font-body), system-ui, sans-serif;
+  }
 }
 
-@keyframes tf-rise {
+@keyframes ps-rise {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -124,25 +151,18 @@
   }
 }
 
-@keyframes tf-fade {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.animate-tf-rise {
-  animation: tf-rise 0.7s ease-out both;
+.animate-tf-rise,
+.animate-ps-rise {
+  animation: ps-rise 0.65s ease-out both;
 }
 
 .animate-tf-fade {
-  animation: tf-fade 0.9s ease-out 0.1s both;
+  animation: ps-rise 0.85s ease-out 0.08s both;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-tf-rise,
+  .animate-ps-rise,
   .animate-tf-fade {
     animation: none;
   }
