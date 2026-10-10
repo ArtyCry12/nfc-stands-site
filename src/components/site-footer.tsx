@@ -1,31 +1,36 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { GoogleStripe } from "@/components/google-stripe";
 
 export async function SiteFooter() {
   const t = await getTranslations("footer");
   const n = await getTranslations("nav");
 
   return (
-    <footer className="mt-16 border-t border-white/10 bg-[var(--tf-ink)] text-white">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 md:flex-row md:items-end md:justify-between md:px-6">
+    <footer className="mt-20 border-t border-[var(--border)] bg-[var(--tf-stage-soft)]">
+      <GoogleStripe />
+      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 md:flex-row md:items-end md:justify-between md:px-6">
         <div>
-          <p className="font-[family-name:var(--font-display)] text-2xl font-bold lowercase tracking-tight">
+          <p className="font-[family-name:var(--font-display)] text-3xl font-extrabold tracking-tight text-[var(--tf-ink)] md:text-5xl">
             touchform<span className="text-[var(--tf-accent)]">.md</span>
           </p>
-          <p className="mt-2 text-sm text-white/60">{t("tagline")}</p>
-          <p className="mt-1 text-xs text-white/40">{t("rights")}</p>
+          <p className="mt-3 text-sm text-[var(--tf-body)]">{t("tagline")}</p>
+          <p className="mt-1 text-xs text-[var(--tf-meta)]">{t("rights")}</p>
         </div>
-        <div className="flex flex-wrap gap-4 text-sm text-white/70">
-          <Link href="/catalog" className="hover:text-white">
+        <div className="flex flex-wrap gap-5 text-sm text-[var(--tf-body)]">
+          <Link href="/catalog" className="hover:text-[var(--tf-ink)]">
             {n("catalog")}
           </Link>
-          <Link href="/consultant" className="hover:text-white">
+          <Link href="/solutions" className="hover:text-[var(--tf-ink)]">
+            {n("solutions")}
+          </Link>
+          <Link href="/consultant" className="hover:text-[var(--tf-ink)]">
             {n("consultant")}
           </Link>
-          <Link href="/about" className="hover:text-white">
-            {n("about")}
+          <Link href="/cases" className="hover:text-[var(--tf-ink)]">
+            {n("cases")}
           </Link>
-          <Link href="/contact" className="hover:text-white">
+          <Link href="/contact" className="hover:text-[var(--tf-ink)]">
             {n("contact")}
           </Link>
         </div>

@@ -49,48 +49,55 @@
 }
 
 :root {
-  --tf-ink: #111111;
-  --tf-accent: #ff7a45;
+  /* White foundation — Google-inspired accents, no affiliation claim */
+  --tf-ink: #202124;
+  --tf-accent: #1a73e8;
+  --tf-accent-soft: #e8f0fe;
   --tf-sheet: #ffffff;
-  --tf-body: #5e5e5e;
-  --tf-meta: #8a8a8a;
-  --tf-photo: #171717;
-  --tf-error: #d92d20;
-  --tf-stage: #111111;
-  --tf-stage-soft: #fff1ea;
+  --tf-body: #5f6368;
+  --tf-meta: #80868b;
+  --tf-photo: #f1f3f4;
+  --tf-error: #d93025;
+  --tf-stage: #ffffff;
+  --tf-stage-soft: #f8f9fa;
+  --tf-g-blue: #4285f4;
+  --tf-g-red: #ea4335;
+  --tf-g-yellow: #fbbc04;
+  --tf-g-green: #34a853;
+  --tf-mark: #ff7a45; /* Threshold logo coral — kept for mark only */
 
-  --background: #f6f4f2;
-  --foreground: #111111;
+  --background: #ffffff;
+  --foreground: #202124;
   --card: #ffffff;
-  --card-foreground: #111111;
+  --card-foreground: #202124;
   --popover: #ffffff;
-  --popover-foreground: #111111;
-  --primary: #111111;
+  --popover-foreground: #202124;
+  --primary: #202124;
   --primary-foreground: #ffffff;
-  --secondary: #fff1ea;
-  --secondary-foreground: #111111;
-  --muted: #f0eeec;
-  --muted-foreground: #5e5e5e;
-  --accent: #fff1ea;
-  --accent-foreground: #111111;
-  --destructive: #d92d20;
-  --border: #e7e2de;
-  --input: #e7e2de;
-  --ring: #ff7a45;
-  --chart-1: #111111;
-  --chart-2: #ff7a45;
-  --chart-3: #5e5e5e;
-  --chart-4: #8a8a8a;
-  --chart-5: #171717;
-  --radius: 1rem;
+  --secondary: #f8f9fa;
+  --secondary-foreground: #202124;
+  --muted: #f1f3f4;
+  --muted-foreground: #5f6368;
+  --accent: #e8f0fe;
+  --accent-foreground: #174ea6;
+  --destructive: #d93025;
+  --border: #e8eaed;
+  --input: #e8eaed;
+  --ring: #1a73e8;
+  --chart-1: #1a73e8;
+  --chart-2: #34a853;
+  --chart-3: #fbbc04;
+  --chart-4: #ea4335;
+  --chart-5: #5f6368;
+  --radius: 0.75rem;
   --sidebar: #ffffff;
-  --sidebar-foreground: #111111;
-  --sidebar-primary: #111111;
+  --sidebar-foreground: #202124;
+  --sidebar-primary: #1a73e8;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #fff1ea;
-  --sidebar-accent-foreground: #111111;
-  --sidebar-border: #e7e2de;
-  --sidebar-ring: #ff7a45;
+  --sidebar-accent: #e8f0fe;
+  --sidebar-accent-foreground: #174ea6;
+  --sidebar-border: #e8eaed;
+  --sidebar-ring: #1a73e8;
 }
 
 @layer base {
@@ -109,7 +116,7 @@
 @keyframes tf-rise {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -127,11 +134,11 @@
 }
 
 .animate-tf-rise {
-  animation: tf-rise 0.8s ease-out both;
+  animation: tf-rise 0.7s ease-out both;
 }
 
 .animate-tf-fade {
-  animation: tf-fade 1s ease-out 0.15s both;
+  animation: tf-fade 0.9s ease-out 0.1s both;
 }
 
 @media (prefers-reduced-motion: reduce) {

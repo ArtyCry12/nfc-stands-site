@@ -27,7 +27,7 @@ export default async function ProductPage({ params }: Props) {
   const tiers = formatStandardTierTable(loc);
 
   return (
-    <div className="mx-auto grid max-w-6xl gap-8 px-4 pb-16 pt-28 md:grid-cols-2 md:px-6">
+    <div className="mx-auto grid max-w-6xl gap-8 px-4 pb-16 pt-10 md:pt-14 md:grid-cols-2 md:px-6">
       <div className="overflow-hidden rounded-[1.75rem] bg-white p-3 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
         <ProductVisual
           productType={product.slug}

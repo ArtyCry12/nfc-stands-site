@@ -17,7 +17,7 @@ export default async function ConfigurePage({ params }: Props) {
   const t = await getTranslations("configure");
 
   return (
-    <div className="mx-auto max-w-6xl px-4 pb-16 pt-28 md:px-6">
+    <div className="mx-auto max-w-6xl px-4 pb-16 pt-10 md:pt-14 md:px-6">
       <p className="mb-4 text-xs uppercase tracking-[0.18em] text-[var(--tf-meta)]">
         {t("title")}
       </p>
