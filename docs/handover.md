@@ -1,6 +1,6 @@
 # Touchform.md — Handover / runbook
 
-Updated after layered product renderer — 2026-10-09.
+Updated after white-foundation redesign + approved videos — 2026-10-10.
 
 ## Run
 
@@ -11,10 +11,11 @@ npm run dev   # http://127.0.0.1:4317
 npm test      # pricing + QR decode + product-layers + consultant eval (6)
 ```
 
-Branch: `cursor/touchform-site-ef45`  
+Branch: `cursor/redesign-videos-ef45` (off `cursor/touchform-site-ef45`)  
 Agent: https://cursor.com/agents/bc-e56d29f7-e163-50ca-bfaa-a3ff9b78ef45  
 Package SoT: `/cursor/stores/self/docs/package/` (also in `docs/package/`)  
-Acceptance: `/cursor/stores/self/internal/acceptance-checklist.md`
+Acceptance: `/cursor/stores/self/internal/acceptance-checklist.md`  
+Redesign report: `/cursor/stores/self/internal/redesign-media-report.md`
 
 ## Standard pricing (founder)
 
@@ -52,7 +53,9 @@ See `.env.example`. Critical:
 - Persistent concept store under `.data/concepts/` + `/api/concepts/[id]`
 - IP burst + daily image cap + session cookie max-2 + kill switch
 - Three logo SVGs; **Threshold** in chrome; ADR documented
-- **Deterministic layered product renderer** (`src/lib/product-layers.ts` `layered-v1`): stand + material/color + branding + QR overlay — used in catalog / configure / concept + `/api/generate` (mode `layered_svg`). Geometry stable across iterations.
+- **Deterministic layered product renderer** (`layered-v1`) — configure / concept / generate
+- **White-foundation redesign** + six founder videos in `public/videos/` (hero, catalogue, AI, how-NFC, real demo, Padel case)
+- Products ≠ Solutions taxonomy; Hook→Insight→Example→Benefit→Next case copy
 - Build + `npm test` green; Try Live on `:4317`
 
 ## Needs founder (§13 gates)
@@ -69,6 +72,7 @@ See `.env.example`. Critical:
 
 - Live Telegram `sendPhoto` evidence
 - Paid LLM / image path (enhancement over layered SVG)
+- Optional compressed video derivatives if weight becomes an issue
 - Supabase swap for `.data/` when approved
 - Preview deploy (Origin `agent_temp` blocks PR forge)
 - LLM-judge language-quality evals

@@ -53,7 +53,11 @@ Cucurigo, Délice d’Ange, Padel Point — honest summaries; partial verificati
 
 ## Design
 
-**Object Stage** retained (charcoal hero, coral accent, Space Grotesk / DM Sans). Founder still approves final logo before production identity.
+**White foundation** (2026-10-10): white surfaces, generous whitespace, Space Grotesk / DM Sans, restrained blue `#1A73E8`, careful multicolour stripe (Google-inspired accents, no affiliation). Threshold mark coral retained for the logo asset only. Founder still approves final logo before production identity.
+
+## Approved videos
+
+Sourced from `ArtyCry12/nfc-stands-site` branch `public/videos-1` into `public/videos/` (exact GitHub names + ASCII symlinks). Placements: hero environments, catalogue range, AI consultant motion (+ real HTML chat), how-NFC tap, real NFC demo (`IMG_5953`), Padel Point case (`IMG_6235`). Silent playback, posters, reduced-motion static fallbacks.
 
 ## Route aliases
 
